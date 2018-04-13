@@ -66,14 +66,14 @@ virtualenvwrapper
 用于管理虚拟环境
 安装：
 cmd下，在虚拟环境的目录下
-cd C:\Users\lin\scrapy_test\Scripts
+cd C:\Users\admin\scrapy_test\Scripts
 pip install -i https://pypi.douban.com/simple/ virtualenvwrapper-win
 
 
 
 virtualenvwrapper 的命令
 
-cd C:\Users\lin\scrapy_test\Scripts
+cd C:\Users\admin\scrapy_test\Scripts
 workon  -->查看虚拟环境
 
 mkvirtualenv test_vir    -->将会在默认目录（C:\Users\admin\Envs）下创建名为test_vir的虚拟环境

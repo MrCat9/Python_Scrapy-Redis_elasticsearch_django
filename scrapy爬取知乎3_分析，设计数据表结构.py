@@ -4,7 +4,7 @@ C:\Users\admin>workon scrapy_test
 >>> response.text
 '<html><body><h1>500 Server Error</h1>\nAn internal server error occured.\n</body></html>\n'
 #直接访问会返回500 Internal Server Error  #要加上User-Agent
-(scrapy_test) C:\Users\lin>scrapy shell -s USER_AGENT="Mozilla/5.0 (Windows NT 6.1; WOW64; rv:51.0) Gecko/20100101 Firefox/51.0" https://www.zhihu.com/question/271074839/answer/360407925
+(scrapy_test) C:\Users\admin>scrapy shell -s USER_AGENT="Mozilla/5.0 (Windows NT 6.1; WOW64; rv:51.0) Gecko/20100101 Firefox/51.0" https://www.zhihu.com/question/271074839/answer/360407925
 
 
 

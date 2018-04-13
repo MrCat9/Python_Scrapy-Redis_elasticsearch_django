@@ -4,14 +4,14 @@
 from scrapy.cmdline import execute  #调用这个函数可以执行scrapy的脚本
 
 # import sys
-# sys.path.append('F:\eclipse\LS\20180109\test_jobbole')  #设置工程的目录  #复制工程test_jobbole的路径
+# sys.path.append('F:\eclipse\···\···\test_jobbole')  #设置工程的目录  #复制工程test_jobbole的路径
 
 import sys
 import os
 # os.path.abspath(__file__)  #获取当前文件的路径
 # os.path.dirname(os.path.abspath(__file__))  #获取当前文件的文件夹的路径
-print(os.path.abspath(__file__))  #F:\eclipse\LS\20180109\test_jobbole\main.py
-print(os.path.dirname(os.path.abspath(__file__)))  #F:\eclipse\LS\20180109\test_jobbole
+print(os.path.abspath(__file__))  #F:\eclipse\···\···\test_jobbole\main.py
+print(os.path.dirname(os.path.abspath(__file__)))  #F:\eclipse\···\···\test_jobbole
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))  #设置工程的目录
 
 execute(['scrapy', 'crawl', 'jobbole_spider'])  #调用execute函数，执行scrapy命令
