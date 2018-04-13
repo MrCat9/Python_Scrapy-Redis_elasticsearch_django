@@ -1,0 +1,105 @@
+virtualenv 是一个可以在同一计算机中隔离多个python版本的工具。
+有时，两个不同的项目可能需要不同版本的python，如 python2.6.6 / python3.0 ，但是如果都装到一起，经常会导致问题。
+所以需要一个工具能够将这两种或几种不同版本的环境隔离开来，需要哪个版本就切换到哪个版本做为默认版本。
+virtualenv 既是满足这个需求的工具。它能够用于创建独立的Python环境，多个Python相互独立，互不影响，能够：
+1.在没有权限的情况下安装新套件
+2.不同应用可以使用不同的套件版本
+3.套件升级不影响其他应用
+
+
+
+安装virtualenv
+cmd下：
+pip install virtualenv
+
+使用python豆瓣源（镜像源）：  -->可以加速下载
+虽然用easy_install和pip来安装第三方库很方便
+它们的原理其实就是从Python的官方源pypi.python.org/pypi 下载到本地，然后解包安装。
+不过因为某些原因，访问官方的pypi不稳定，很慢甚至有些还时不时的访问不了。
+跟ubuntu的apt和centos的yum有各个镜像源一样，pypi也有。
+在国内的强烈推荐豆瓣的源
+https://pypi.douban.com/simple/
+注意后面要有/simple目录。
+
+使用方法：
+cmd下:
+pip install -i https://pypi.douban.com/simple/ django
+
+卸载
+cmd下：
+pip uninstall django
+
+
+
+新建virtualenv
+cmd下：
+virtualenv scrapy_test      -->在当前目录下新建一个名为scrapy_test的虚拟环境
+
+进入虚拟环境:
+cmd下：
+cd scrapy_test
+cd Scripts
+activate.bat
+python
+
+退出虚拟环境:
+cmd下：
+ctrl+z+enter
+deactivate.bat
+
+
+
+新建指定版本的虚拟环境：
+cmd下
+virtualenv -p C:\Users\Admin\AppData\Local\Programs\Python\Python36\python.exe scrapypy3_test
+
+
+
+virtualenvwrapper是virtualenv的扩展管理包，用于更方便管理虚拟环境，它可以：
+1.将所有虚拟环境整合在一个目录下
+2.管理（新增，删除，复制）虚拟环境
+3.切换虚拟环境
+
+
+
+virtualenvwrapper
+用于管理虚拟环境
+安装：
+cmd下，在虚拟环境的目录下
+cd C:\Users\lin\scrapy_test\Scripts
+pip install -i https://pypi.douban.com/simple/ virtualenvwrapper-win
+
+
+
+virtualenvwrapper 的命令
+
+cd C:\Users\lin\scrapy_test\Scripts
+workon  -->查看虚拟环境
+
+mkvirtualenv test_vir    -->将会在默认目录（C:\Users\admin\Envs）下创建名为test_vir的虚拟环境
+                         -->若想要改变默认目录，可以在
+                         -->此电脑-->属性-->高级系统设置-->环境变量-->新建系统变量-->变量名：WORKON_HOME    变量值：（自定义的目录）
+                         中配置
+创建完成后会自动进入该虚拟环境
+deactivate.bat  -->退出该虚拟环境
+
+下次要进入的话：
+cd C:\Users\admin\scrapy_test\Scripts    -->在有安装virtualenvwrapper的目录下才能使用workon
+workon test_vir
+
+
+
+在虚拟环境下可以安装（如：requests）
+pip install -i https://pypi.douban.com/simple requests
+（如：scrapy）
+pip install -i https://pypi.douban.com/simple scrapy
+
+
+
+安装失败的话可以访问  www.lfd.uci.edu/~gohlke/pythonlibs
+然后  pip install (错误的东西)
+
+
+
+mkvirtualenv --python=C:\Users\admin\AppData\Local\Programs\Python\Python36\python.exe test_python3
+--> 创建python3版本的虚拟环境           python3的目录                                     虚拟环境名称
