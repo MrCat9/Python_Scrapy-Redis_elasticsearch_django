@@ -1,4 +1,4 @@
-# 在数据库article_spider的tables下，新建表 lagou
+# 在数据库article_spider的tables下，新建表 lagou_job
 Field Name              Datatype        Len         Default     PK?     Not Null
 url                     varchar         300                                √
 url_object_id           varchar         50                       √         √
@@ -20,6 +20,6 @@ crawl_update_time       datetime
 
 
 
-
+#
 
 
