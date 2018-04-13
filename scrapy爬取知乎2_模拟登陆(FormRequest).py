@@ -191,7 +191,7 @@ is_login()
 # 新建知乎的spider
 # cmd下
 C:\Users\admin>workon scrapy_test
-(scrapy_test) C:\Users\lin>f:
+(scrapy_test) C:\Users\admin>f:
 (scrapy_test) F:\>cd F:\eclipse\···\···\test_scrapy_spider
 (scrapy_test) F:\eclipse\···\···\test_scrapy_spider>scrapy genspider zhihu www.zhihu.com
 
@@ -302,14 +302,14 @@ class ZhihuSpider(scrapy.Spider):
 from scrapy.cmdline import execute  #调用这个函数可以执行scrapy的脚本
 
 # import sys
-# sys.path.append('F:\eclipse\LS\20180109\test_scrapy_spider')  #设置工程的目录  #复制工程test_scrapy_spider的路径
+# sys.path.append('F:\eclipse\···\···\test_scrapy_spider')  #设置工程的目录  #复制工程test_scrapy_spider的路径
 
 import sys
 import os
 # os.path.abspath(__file__)  #获取当前文件的路径
 # os.path.dirname(os.path.abspath(__file__))  #获取当前文件的文件夹的路径
-print(os.path.abspath(__file__))  #F:\eclipse\LS\20180109\test_scrapy_spider\main.py
-print(os.path.dirname(os.path.abspath(__file__)))  #F:\eclipse\LS\20180109\test_scrapy_spider
+print(os.path.abspath(__file__))  #F:\eclipse\···\···\test_scrapy_spider\main.py
+print(os.path.dirname(os.path.abspath(__file__)))  #F:\eclipse\···\···\test_scrapy_spider
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))  #设置工程的目录
 
 # execute(['scrapy', 'crawl', 'jobbole_spider'])  #调用execute函数，执行scrapy命令
