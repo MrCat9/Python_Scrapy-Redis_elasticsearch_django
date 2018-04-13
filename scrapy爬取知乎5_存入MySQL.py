@@ -16,7 +16,7 @@ print(time2.__class__)  #<class 'str'>
 
 
 
-test_scrapy_spider\test_scrapy_spider\pipelines.py
+#test_scrapy_spider\test_scrapy_spider\pipelines.py
 # -*- coding: utf-8 -*-
 
 # Define your item pipelines here
@@ -276,12 +276,6 @@ class JobboleArticleItem(scrapy.Item):
         params = (self["title"], self["create_date"], self["url"], self["url_object_id"], self["fav_nums"], self["front_image_url"], 'self["front_image_path"]', self["praise_nums"], self["comment_nums"], self["tags"], self["content"])
 
         return insert_sql, params
-
-
-
-
-
-
 
 
 class ZhihuQuestionItem(scrapy.Item):
