@@ -8,12 +8,12 @@ from scrapy.spiders import CrawlSpider, Rule
 from items import LagouJobItemLoader, LagouJobItem
 from utils.common import get_md5
 
-class LagouSpider(CrawlSpider):  #¼Ì³ĞCrawlSpider  #CrawlSpider²»ÄÜ¸²¸Çparseº¯Êı  # _parse_responseÊÇCrawlSpiderµÄºËĞÄº¯Êı
-    name = 'lagou'                                 #¿ÉÒÔÑ¡ÔñÖØÔØparse_start_url»òÕßprocess_results
+class LagouSpider(CrawlSpider):  #ç»§æ‰¿CrawlSpider  #CrawlSpiderä¸èƒ½è¦†ç›–parseå‡½æ•°  # _parse_responseæ˜¯CrawlSpiderçš„æ ¸å¿ƒå‡½æ•°
+    name = 'lagou'                                 #å¯ä»¥é€‰æ‹©é‡è½½parse_start_urlæˆ–è€…process_results
     allowed_domains = ['www.lagou.com']
     start_urls = ['https://www.lagou.com']
 
-#     rules = (  # rulesÀï·ÅRuleÊµÀı  #
+#     rules = (  # rulesé‡Œæ”¾Ruleå®ä¾‹  #
 #         Rule(LinkExtractor(allow=r'Items/'), callback='parse_item', follow=True),
 #     )
 # 
@@ -24,21 +24,21 @@ class LagouSpider(CrawlSpider):  #¼Ì³ĞCrawlSpider  #CrawlSpider²»ÄÜ¸²¸Çparseº¯Êı
 #         #i['description'] = response.xpath('//div[@id="description"]').extract()
 #         return i
 
-    rules = (  # rulesÀï·ÅRuleÊµÀı  #allowed_domains»áÏÈ¹ıÂËÒ»Ğ©url
+    rules = (  # rulesé‡Œæ”¾Ruleå®ä¾‹  #allowed_domainsä¼šå…ˆè¿‡æ»¤ä¸€äº›url
         Rule(LinkExtractor(allow=("zhaopin/.*",)), follow=True),  #https://www.lagou.com/zhaopin/Python/?labelWords=label
         Rule(LinkExtractor(allow=("gongsi/j\d+.html",)), follow=True),  #https://www.lagou.com/gongsi/j173918.html
         Rule(LinkExtractor(allow=r'jobs/\d+.html'), callback='parse_job', follow=True),  #https://www.lagou.com/jobs/4155435.html
-    )                           #Æ¥ÅäÕâ¸öreµÄurl£¬Ìøµ½parse_job
+    )                           #åŒ¹é…è¿™ä¸ªreçš„urlï¼Œè·³åˆ°parse_job
     #
-    # def parse_start_url(self, response):  #ÕâÀï²»ĞèÒªÖØÔØparse_start_url
+    # def parse_start_url(self, response):  #è¿™é‡Œä¸éœ€è¦é‡è½½parse_start_url
     #     return []
     #
-    # def process_results(self, response, results):  #ÕâÀï²»ĞèÒªÖØÔØprocess_results
+    # def process_results(self, response, results):  #è¿™é‡Œä¸éœ€è¦é‡è½½process_results
     #     return results
 
     def parse_job(self, response):
-        #½âÎöÀ­¹´ÍøµÄÖ°Î»
-        #pass  #debug¿´ruleÊÇ·ñÄÜ½øµ½parse_job
+        #è§£ææ‹‰å‹¾ç½‘çš„èŒä½
+        #pass  #debugçœ‹ruleæ˜¯å¦èƒ½è¿›åˆ°parse_job
         item_loader = LagouJobItemLoader(item=LagouJobItem(), response=response)
         item_loader.add_css("title", ".job-name::attr(title)")
         item_loader.add_value("url", response.url)
@@ -73,9 +73,9 @@ class LagouSpider(CrawlSpider):  #¼Ì³ĞCrawlSpider  #CrawlSpider²»ÄÜ¸²¸Çparseº¯Êı
 # https://doc.scrapy.org/en/latest/topics/items.html
 
 import scrapy
-from scrapy.loader.processors import MapCompose, TakeFirst, Join  #ÓÃÀ´¶Ô´«ÈëµÄÖµ½øĞĞ´¦Àí
+from scrapy.loader.processors import MapCompose, TakeFirst, Join  #ç”¨æ¥å¯¹ä¼ å…¥çš„å€¼è¿›è¡Œå¤„ç†
 import datetime
-from scrapy.loader import ItemLoader  #ÎªÁË²»Ã¿¸ö¶¼ÒªĞ´outputoutput_processor = TakeFirst() ÎÒÃÇ×Ô¶¨Ò»¸öitemloader  ÓëÊÇÒªÖØÔØÀàItemLoader
+from scrapy.loader import ItemLoader  #ä¸ºäº†ä¸æ¯ä¸ªéƒ½è¦å†™outputoutput_processor = TakeFirst() æˆ‘ä»¬è‡ªå®šä¸€ä¸ªitemloader  ä¸æ˜¯è¦é‡è½½ç±»ItemLoader
 import re
 from utils.common import extract_num
 from settings import SQL_DATETIME_FORMAT
@@ -88,15 +88,15 @@ class TestScrapySpiderItem(scrapy.Item):
     # name = scrapy.Field()
     pass
 
-def add_jobbole(value):  #´«¹ıÀ´µÄvalueÊÇÒ»¸östr
+def add_jobbole(value):  #ä¼ è¿‡æ¥çš„valueæ˜¯ä¸€ä¸ªstr
     return value+"-jobbole"
 
 
 def date_convert(value):
-    value = value.strip().replace('¡¤', '').strip()  #create_date = response.css('p.entry-meta-hide-on-mobile::text').extract()[0].strip().replace('¡¤', '').strip()
-                 #.strip()¿ÉÒÔÈ¥µôstrÍ·Î²µÄ¿Õ¸ñ  #.replace('¡¤', '')¿ÉÒÔÌæ»»strÖĞµÄ£¬Îª¿Õ
-    try:  #ÎªÁË½«ÎÄÕÂµÄ´´½¨Ê±¼äĞ´ÈëÊı¾İ¿â£¬Òª°ÑstrÀàĞÍµÄcreate_time×ª»»ÎªdateÀàĞÍ
-        create_date = datetime.datetime.strptime(value, '%Y/%m/%d').date()  #½«¸ñÊ½Îª%Y/%m/%d µÄstrÀàĞÍ×ª»»ÎªdateÀàĞÍ
+    value = value.strip().replace('Â·', '').strip()  #create_date = response.css('p.entry-meta-hide-on-mobile::text').extract()[0].strip().replace('Â·', '').strip()
+                 #.strip()å¯ä»¥å»æ‰strå¤´å°¾çš„ç©ºæ ¼  #.replace('Â·', '')å¯ä»¥æ›¿æ¢strä¸­çš„ï¼Œä¸ºç©º
+    try:  #ä¸ºäº†å°†æ–‡ç« çš„åˆ›å»ºæ—¶é—´å†™å…¥æ•°æ®åº“ï¼Œè¦æŠŠstrç±»å‹çš„create_timeè½¬æ¢ä¸ºdateç±»å‹
+        create_date = datetime.datetime.strptime(value, '%Y/%m/%d').date()  #å°†æ ¼å¼ä¸º%Y/%m/%d çš„strç±»å‹è½¬æ¢ä¸ºdateç±»å‹
     except Exception as e:
         create_date = datetime.datetime.now().date()
     return create_date
@@ -111,8 +111,8 @@ def get_nums(value):
     
     
 def remove_comment_tags(value):
-    #È¥µôtagÖĞÌáÈ¡µÄÆÀÂÛ
-    if "ÆÀÂÛ" in value:
+    #å»æ‰tagä¸­æå–çš„è¯„è®º
+    if "è¯„è®º" in value:
         return ""
     else:
         return value    
@@ -123,48 +123,48 @@ def return_value(value):
 
 
 
-class ArticleItemLoader(ItemLoader):  #×Ô¶¨Òåitemloader
-    default_output_processor = TakeFirst()  #ÕâÑù¾Í²»ÓÃÃ¿¸ö¶¼Ğ´outputoutput_processor = TakeFirst()
+class ArticleItemLoader(ItemLoader):  #è‡ªå®šä¹‰itemloader
+    default_output_processor = TakeFirst()  #è¿™æ ·å°±ä¸ç”¨æ¯ä¸ªéƒ½å†™outputoutput_processor = TakeFirst()
 
 
 
 class JobboleArticleItem(scrapy.Item):
 #     title = scrapy.Field(
-#         #input_processor = MapCompose(add_jobbole)  #title »á×÷Îªvalue ´«µİµ½add_jobbole·½·¨ÖĞ
+#         #input_processor = MapCompose(add_jobbole)  #title ä¼šä½œä¸ºvalue ä¼ é€’åˆ°add_jobboleæ–¹æ³•ä¸­
 #         #input_processor = MapCompose(lambda x:x+"--jobbole")
-#         input_processor = MapCompose(lambda x:x+"--jobbole", add_jobbole),  #titleÖĞµÄÃ¿¸öÖµÒÀ´Î´Ó×óµ½ÓÒµ÷ÓÃÁËÁ½¸öº¯Êı
+#         input_processor = MapCompose(lambda x:x+"--jobbole", add_jobbole),  #titleä¸­çš„æ¯ä¸ªå€¼ä¾æ¬¡ä»å·¦åˆ°å³è°ƒç”¨äº†ä¸¤ä¸ªå‡½æ•°
 #         #output_processor = TakeFirst()
 #         )
     title = scrapy.Field()
     create_date = scrapy.Field(
-        input_processor = MapCompose(date_convert),  #´¦ÀíÍêºóÊÇÒ»¸ölist£¬ listÀïÓĞdate
-        #output_processor = TakeFirst()  #È¡³ödate£¬ Ê¹listÀà±ä³ÉdateÀà
+        input_processor = MapCompose(date_convert),  #å¤„ç†å®Œåæ˜¯ä¸€ä¸ªlistï¼Œ listé‡Œæœ‰date
+        #output_processor = TakeFirst()  #å–å‡ºdateï¼Œ ä½¿listç±»å˜æˆdateç±»
         )
     url = scrapy.Field()
-    url_object_id = scrapy.Field()  #url ½øĞĞmd5´¦Àí£¬±ä³ÉÏàÍ¬³¤¶È
-    front_image_url = scrapy.Field(  #ÏÂÔØ·âÃæÍ¼Æ¬ÒªÔÚsettings.py ÖĞµÄ ITEM_PIPELINES ½øĞĞÅäÖÃ  #front_image_url ĞèÒª½ÓÊÕÒ»¸ölist  ÒòÎªimagesĞèÒª½ÓÊÜÒ»¸öÊı×é
-        output_processor = MapCompose(return_value)  #¸²¸Çµôdefault_output_processor = TakeFirst() Ê¹µÃ´«ÈëµÄÊÇÒ»¸ölist
+    url_object_id = scrapy.Field()  #url è¿›è¡Œmd5å¤„ç†ï¼Œå˜æˆç›¸åŒé•¿åº¦
+    front_image_url = scrapy.Field(  #ä¸‹è½½å°é¢å›¾ç‰‡è¦åœ¨settings.py ä¸­çš„ ITEM_PIPELINES è¿›è¡Œé…ç½®  #front_image_url éœ€è¦æ¥æ”¶ä¸€ä¸ªlist  å› ä¸ºimageséœ€è¦æ¥å—ä¸€ä¸ªæ•°ç»„
+        output_processor = MapCompose(return_value)  #è¦†ç›–æ‰default_output_processor = TakeFirst() ä½¿å¾—ä¼ å…¥çš„æ˜¯ä¸€ä¸ªlist
         )
-# """  settings.py ÏÂ
+# """  settings.py ä¸‹
 # ITEM_PIPELINES = {
-#     'test_scrapy_spider.pipelines.TestJobbolePipeline': 300,  #Êı×ÖÔ½Ğ¡£¬Ô½ÏÈ´¦Àí
+#     'test_scrapy_spider.pipelines.TestJobbolePipeline': 300,  #æ•°å­—è¶Šå°ï¼Œè¶Šå…ˆå¤„ç†
 #     #'scrapy.pipelines.images.ImagesPipeline': 1
-#     'test_scrapy_spider.pipelines.ArticleImagePipeline': 1  #µ÷ÓÃ¶¨ÖÆ»¯µÄpipeline£¨ArticleImagePipeline£©
+#     'test_scrapy_spider.pipelines.ArticleImagePipeline': 1  #è°ƒç”¨å®šåˆ¶åŒ–çš„pipelineï¼ˆArticleImagePipelineï¼‰
 # }
-# IMAGES_URLS_FIELD = 'front_image_url'  #¸æËßimages, itemsÖĞÄÄ¸öÊÇÍ¼Æ¬µÄurl  #imagesĞèÒª½ÓÊÜÒ»¸öÊı×é
-# import os  #ÓÃÓÚ»ñÈ¡µ±Ç°ÎÄ¼ş£¨setting.py£©µÄÂ·¾¶
-# #os.path.dirname(__file__)  #»ñÈ¡µ±Ç°ÎÄ¼şµÄÄ¿Â¼Ãû³Æ£¨test_scrapy_spider£©  #__file__ÊÇµ±Ç°ÎÄ¼ş£¨setting.py£©µÄÃû³Æ
-# project_dir =  os.path.abspath(os.path.dirname(__file__))  #»ñÈ¡µ±Ç°ÎÄ¼şµÄÄ¿Â¼µÄÂ·¾¶
-# IMAGES_STORE = os.path.join(project_dir, 'images')  #Í¼Æ¬ÏÂÔØµÄ±£´æÂ·¾¶  ¿ÉÒÔÅäÖÃÎª¾ø¶ÔÂ·¾¶  Òª´æÔÚ¹¤³ÌÄ¿Â¼ÏÂ£¬¿ÉÒÔÊ¹ÓÃÏà¶ÔÂ·¾¶¡£ÔÚsettings.pyµÄÍ¬¼¶Ä¿Â¼ÏÂĞÂ½¨images
-#                                                     #Í¼Æ¬´¢´æÔÚ project_dirÄ¿Â¼ÏÂµÄimagesÎÄ¼ş¼Ğ
-#                                                     #ÒªÏÂÔØÍ¼Æ¬ĞèÒªPIL¿â
-#                                                     #ÏÂcmdÏÂ°²×°PIL¿â
+# IMAGES_URLS_FIELD = 'front_image_url'  #å‘Šè¯‰images, itemsä¸­å“ªä¸ªæ˜¯å›¾ç‰‡çš„url  #imageséœ€è¦æ¥å—ä¸€ä¸ªæ•°ç»„
+# import os  #ç”¨äºè·å–å½“å‰æ–‡ä»¶ï¼ˆsetting.pyï¼‰çš„è·¯å¾„
+# #os.path.dirname(__file__)  #è·å–å½“å‰æ–‡ä»¶çš„ç›®å½•åç§°ï¼ˆtest_scrapy_spiderï¼‰  #__file__æ˜¯å½“å‰æ–‡ä»¶ï¼ˆsetting.pyï¼‰çš„åç§°
+# project_dir =  os.path.abspath(os.path.dirname(__file__))  #è·å–å½“å‰æ–‡ä»¶çš„ç›®å½•çš„è·¯å¾„
+# IMAGES_STORE = os.path.join(project_dir, 'images')  #å›¾ç‰‡ä¸‹è½½çš„ä¿å­˜è·¯å¾„  å¯ä»¥é…ç½®ä¸ºç»å¯¹è·¯å¾„  è¦å­˜åœ¨å·¥ç¨‹ç›®å½•ä¸‹ï¼Œå¯ä»¥ä½¿ç”¨ç›¸å¯¹è·¯å¾„ã€‚åœ¨settings.pyçš„åŒçº§ç›®å½•ä¸‹æ–°å»ºimages
+#                                                     #å›¾ç‰‡å‚¨å­˜åœ¨ project_dirç›®å½•ä¸‹çš„imagesæ–‡ä»¶å¤¹
+#                                                     #è¦ä¸‹è½½å›¾ç‰‡éœ€è¦PILåº“
+#                                                     #ä¸‹cmdä¸‹å®‰è£…PILåº“
 #                                                     #pip install -i https://pypi.douban.com/simple pillow
-# # IMAGES_MIN_HEIGHT = 100 #ÉèÖÃÏÂÔØÍ¼Æ¬µÄ×îĞ¡¸ß¶È  #¹ıÂËÍ¼Æ¬¿ÉÒÔÔÚsettng.pyÖĞÉèÖÃ
+# # IMAGES_MIN_HEIGHT = 100 #è®¾ç½®ä¸‹è½½å›¾ç‰‡çš„æœ€å°é«˜åº¦  #è¿‡æ»¤å›¾ç‰‡å¯ä»¥åœ¨settng.pyä¸­è®¾ç½®
 # # IMAGES_MIN_WIDTH = 100
-# # '''Èç¹ûÒªÊµÏÖ×Ô¼ºµÄĞèÇó£¬Ò²¿ÉÒÔÖØÔØÏàÓ¦µÄº¯Êı´ïµ½ĞèÇó£¬ÔÚpipelinesÖĞ½¨Á¢Àà£¬¼Ì³ĞImagesPipeline¾Í¿ÉÒÔÁË'''                              
+# # '''å¦‚æœè¦å®ç°è‡ªå·±çš„éœ€æ±‚ï¼Œä¹Ÿå¯ä»¥é‡è½½ç›¸åº”çš„å‡½æ•°è¾¾åˆ°éœ€æ±‚ï¼Œåœ¨pipelinesä¸­å»ºç«‹ç±»ï¼Œç»§æ‰¿ImagesPipelineå°±å¯ä»¥äº†'''                              
 # """
-    front_image_path = scrapy.Field()  #±¾µØÍ¼Æ¬Â·¾¶
+    front_image_path = scrapy.Field()  #æœ¬åœ°å›¾ç‰‡è·¯å¾„
     praise_nums = scrapy.Field(
         input_processor = MapCompose(get_nums)
         )
@@ -174,9 +174,9 @@ class JobboleArticleItem(scrapy.Item):
     comment_nums = scrapy.Field(
         input_processor = MapCompose(get_nums)
         )
-    tags = scrapy.Field(  #Õâ±ßµÄtagsÆäÊµÊÇtag_list£¬ÊÇÒ»¸ölist
-        input_processor = MapCompose(remove_comment_tags),  #È¥µôtagÖĞÌáÈ¡µÄÆÀÂÛ
-        output_processor = Join(',')  #²»ÄÜÓÃTakeFirst()£¬ÒªÓÃjoin£¬Join(',')ÖĞµÄ','ÊÇÔÚÖ¸¶¨Á¬½Ó·û
+    tags = scrapy.Field(  #è¿™è¾¹çš„tagså…¶å®æ˜¯tag_listï¼Œæ˜¯ä¸€ä¸ªlist
+        input_processor = MapCompose(remove_comment_tags),  #å»æ‰tagä¸­æå–çš„è¯„è®º
+        output_processor = Join(',')  #ä¸èƒ½ç”¨TakeFirst()ï¼Œè¦ç”¨joinï¼ŒJoin(',')ä¸­çš„','æ˜¯åœ¨æŒ‡å®šè¿æ¥ç¬¦
         )
     content = scrapy.Field()
 
@@ -192,7 +192,7 @@ class JobboleArticleItem(scrapy.Item):
 
 
 class ZhihuQuestionItem(scrapy.Item):
-    #ÖªºõµÄÎÊÌâ item
+    #çŸ¥ä¹çš„é—®é¢˜ item
     zhihu_id = scrapy.Field()
     topics = scrapy.Field()
     url = scrapy.Field()
@@ -205,38 +205,38 @@ class ZhihuQuestionItem(scrapy.Item):
     crawl_time = scrapy.Field()
 
     def get_insert_sql(self):
-        #²åÈëÖªºõquestion±íµÄsqlÓï¾ä
+        #æ’å…¥çŸ¥ä¹questionè¡¨çš„sqlè¯­å¥
         insert_sql = """
             insert into zhihu_question(zhihu_id, topics, url, title, content, create_time, update_time, answer_num, comments_num, watch_user_num, click_num, crawl_time, crawl_update_time)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             ON DUPLICATE KEY UPDATE content=VALUES(content), answer_num=VALUES(answer_num), comments_num=VALUES(comments_num),
               watch_user_num=VALUES(watch_user_num), click_num=VALUES(click_num)            
         """
-        #ÒÔÏÂ¶ÔÊı×é list [] ½øĞĞ´¦Àí
+        #ä»¥ä¸‹å¯¹æ•°ç»„ list [] è¿›è¡Œå¤„ç†
         #zhihu_id = int("".join(self["zhihu_id"]))
-        zhihu_id = self["zhihu_id"][0]  #zhihu_idÔÚzhihu.pyÖĞÒÑ¾­´¦Àí³ÉintÁË
+        zhihu_id = self["zhihu_id"][0]  #zhihu_idåœ¨zhihu.pyä¸­å·²ç»å¤„ç†æˆintäº†
         topics = ",".join(self["topics"])
         #url = "".join(self["url"])
         url = self["url"][0]
         title = "".join(self["title"])
         content = "".join(self["content"])
-        answer_num = extract_num("".join(self["answer_num"]))  #ÔÚutilsÀïµÄcommon.pyÀï¶¨Òå·½·¨extract_num  #ÓÃÀ´ÌáÈ¡Êı×Ö
+        answer_num = extract_num("".join(self["answer_num"]))  #åœ¨utilsé‡Œçš„common.pyé‡Œå®šä¹‰æ–¹æ³•extract_num  #ç”¨æ¥æå–æ•°å­—
         comments_num = extract_num("".join(self["comments_num"]))
 
         if len(self["watch_user_num"]) == 2:
-            self["watch_user_num"] = [x.replace(',', '') for x in self["watch_user_num"]]  #È¥µô['3,110', '824,551']ÖĞµÄ,
+            self["watch_user_num"] = [x.replace(',', '') for x in self["watch_user_num"]]  #å»æ‰['3,110', '824,551']ä¸­çš„,
             watch_user_num = int(self["watch_user_num"][0])
             click_num = int(self["watch_user_num"][1])
         else:
             watch_user_num = int(self["watch_user_num"][0])
             click_num = 0
 
-        crawl_time = datetime.datetime.now().strftime(SQL_DATETIME_FORMAT)  #strftime(SQL_DATETIME_FORMAT)¿ÉÒÔ°ÑtimeÀàĞÍ×ª»¯³ÉstrÀàĞÍ  # (SQL_DATETIME_FORMAT)¿ÉÒÔÔÚsettings.pyÖĞÖ¸¶¨Òª×ªÎªÄÄÖÖ¸ñÊ½
+        crawl_time = datetime.datetime.now().strftime(SQL_DATETIME_FORMAT)  #strftime(SQL_DATETIME_FORMAT)å¯ä»¥æŠŠtimeç±»å‹è½¬åŒ–æˆstrç±»å‹  # (SQL_DATETIME_FORMAT)å¯ä»¥åœ¨settings.pyä¸­æŒ‡å®šè¦è½¬ä¸ºå“ªç§æ ¼å¼
 
-#         create_time = datetime.datetime.now().date()  #Ìî³ädate£¬Ê¹µÃÊı¾İ¿â¿ÉÒÔ²åÈë
+#         create_time = datetime.datetime.now().date()  #å¡«å……dateï¼Œä½¿å¾—æ•°æ®åº“å¯ä»¥æ’å…¥
 #         update_time = datetime.datetime.now().date()
 #         crawl_update_time = datetime.datetime.now().date()
-        create_time = None  #Ìî³ädate£¬Ê¹µÃÊı¾İ¿â¿ÉÒÔ²åÈë
+        create_time = None  #å¡«å……dateï¼Œä½¿å¾—æ•°æ®åº“å¯ä»¥æ’å…¥
         update_time = None
         crawl_update_time = None
         
@@ -247,7 +247,7 @@ class ZhihuQuestionItem(scrapy.Item):
 
 
 class ZhihuAnswerItem(scrapy.Item):
-    #ÖªºõµÄÎÊÌâ»Ø´ğitem
+    #çŸ¥ä¹çš„é—®é¢˜å›ç­”item
     zhihu_id = scrapy.Field()
     url = scrapy.Field()
     question_id = scrapy.Field()
@@ -260,7 +260,7 @@ class ZhihuAnswerItem(scrapy.Item):
     crawl_time = scrapy.Field()
 
     def get_insert_sql(self):
-        #²åÈëÖªºõquestion±íµÄsqlÓï¾ä
+        #æ’å…¥çŸ¥ä¹questionè¡¨çš„sqlè¯­å¥
         insert_sql = """
             insert into zhihu_answer(zhihu_id, url, question_id, author_id, content, parise_num, comments_num,
               create_time, update_time, crawl_time
@@ -268,11 +268,11 @@ class ZhihuAnswerItem(scrapy.Item):
               ON DUPLICATE KEY UPDATE content=VALUES(content), comments_num=VALUES(comments_num), parise_num=VALUES(parise_num),
               update_time=VALUES(update_time)
         """
-        # ON DUPLICATE KEY UPDATEµ±Ö÷¼ü³åÍ»Ê±£¬¸üĞÂ¡­¡­
+        # ON DUPLICATE KEY UPDATEå½“ä¸»é”®å†²çªæ—¶ï¼Œæ›´æ–°â€¦â€¦
 
-        create_time = datetime.datetime.fromtimestamp(self["create_time"]).strftime(SQL_DATETIME_FORMAT)  #´Ójson´«¹ıÀ´Ê±£¬create_timeÊÇintÀàĞÍµÄ
-        update_time = datetime.datetime.fromtimestamp(self["update_time"]).strftime(SQL_DATETIME_FORMAT)  #´Ójson´«¹ıÀ´Ê±£¬update_timeÊÇintÀàĞÍµÄ
-        #.fromtimestamp¿ÉÒÔ°Ñint×ª»¯³Édatetime  #.strftime°Ñdatetime×ª»¯³É×Ô¶¨ÒåÄ£Ê½£¨SQL_DATETIME_FORMAT£©µÄ×Ö·û´®
+        create_time = datetime.datetime.fromtimestamp(self["create_time"]).strftime(SQL_DATETIME_FORMAT)  #ä»jsonä¼ è¿‡æ¥æ—¶ï¼Œcreate_timeæ˜¯intç±»å‹çš„
+        update_time = datetime.datetime.fromtimestamp(self["update_time"]).strftime(SQL_DATETIME_FORMAT)  #ä»jsonä¼ è¿‡æ¥æ—¶ï¼Œupdate_timeæ˜¯intç±»å‹çš„
+        #.fromtimestampå¯ä»¥æŠŠintè½¬åŒ–æˆdatetime  #.strftimeæŠŠdatetimeè½¬åŒ–æˆè‡ªå®šä¹‰æ¨¡å¼ï¼ˆSQL_DATETIME_FORMATï¼‰çš„å­—ç¬¦ä¸²
         
         params = (
             self["zhihu_id"], self["url"], self["question_id"],
@@ -286,21 +286,21 @@ class ZhihuAnswerItem(scrapy.Item):
 
 
 def remove_splash(value):
-    #È¥µô¹¤×÷³ÇÊĞµÄĞ±Ïß
+    #å»æ‰å·¥ä½œåŸå¸‚çš„æ–œçº¿
     return value.replace("/","")
 
-def handle_jobaddr(value):  #value='\n                                                ±±¾© -\n             º£µíÇø\n                - ±±¾©ÊĞº£µíÇø¿ÆÑ§ÔºÄÏÂ·2ºÅÈÚ¿Æ×ÊÑ¶ÖĞĞÄA×ù316\n                              ²é¿´µØÍ¼\n        '
-    addr_list = value.split("\n")  #ÒÔ\nÎª½ç£¬½«str»®·Ö³Élist
-    addr_list = [item.strip() for item in addr_list if item.strip()!="²é¿´µØÍ¼"]  #´¦Àílist£¬È¥µô¿Õ¸ñºÍ²é¿´µØÍ¼
-    return "".join(addr_list)  #ÓÃ¿Õ½«´¦Àí¹ıµÄlistÁ¬³Éstr
+def handle_jobaddr(value):  #value='\n                                                åŒ—äº¬ -\n             æµ·æ·€åŒº\n                - åŒ—äº¬å¸‚æµ·æ·€åŒºç§‘å­¦é™¢å—è·¯2å·èç§‘èµ„è®¯ä¸­å¿ƒAåº§316\n                              æŸ¥çœ‹åœ°å›¾\n        '
+    addr_list = value.split("\n")  #ä»¥\nä¸ºç•Œï¼Œå°†stråˆ’åˆ†æˆlist
+    addr_list = [item.strip() for item in addr_list if item.strip()!="æŸ¥çœ‹åœ°å›¾"]  #å¤„ç†listï¼Œå»æ‰ç©ºæ ¼å’ŒæŸ¥çœ‹åœ°å›¾
+    return "".join(addr_list)  #ç”¨ç©ºå°†å¤„ç†è¿‡çš„listè¿æˆstr
 
 class LagouJobItemLoader(ItemLoader):
-    #×Ô¶¨Òåitemloader
+    #è‡ªå®šä¹‰itemloader
     default_output_processor = TakeFirst()
 
 
 class LagouJobItem(scrapy.Item):
-    #À­¹´ÍøÖ°Î»ĞÅÏ¢
+    #æ‹‰å‹¾ç½‘èŒä½ä¿¡æ¯
     title = scrapy.Field()
     url = scrapy.Field()
     url_object_id = scrapy.Field()
@@ -350,20 +350,20 @@ class LagouJobItem(scrapy.Item):
 # test_scrapy_spider\main.py
 # -*- coding: utf-8 -*-
 
-from scrapy.cmdline import execute  #µ÷ÓÃÕâ¸öº¯Êı¿ÉÒÔÖ´ĞĞscrapyµÄ½Å±¾
+from scrapy.cmdline import execute  #è°ƒç”¨è¿™ä¸ªå‡½æ•°å¯ä»¥æ‰§è¡Œscrapyçš„è„šæœ¬
 
 # import sys
-# sys.path.append('F:\eclipse\¡¤¡¤¡¤\¡¤¡¤¡¤\test_scrapy_spider')  #ÉèÖÃ¹¤³ÌµÄÄ¿Â¼  #¸´ÖÆ¹¤³Ìtest_scrapy_spiderµÄÂ·¾¶
+# sys.path.append('F:\eclipse\Â·Â·Â·\Â·Â·Â·\test_scrapy_spider')  #è®¾ç½®å·¥ç¨‹çš„ç›®å½•  #å¤åˆ¶å·¥ç¨‹test_scrapy_spiderçš„è·¯å¾„
 
 import sys
 import os
-# os.path.abspath(__file__)  #»ñÈ¡µ±Ç°ÎÄ¼şµÄÂ·¾¶
-# os.path.dirname(os.path.abspath(__file__))  #»ñÈ¡µ±Ç°ÎÄ¼şµÄÎÄ¼ş¼ĞµÄÂ·¾¶
-print(os.path.abspath(__file__))  #F:\eclipse\¡¤¡¤¡¤\¡¤¡¤¡¤\test_scrapy_spider\main.py
-print(os.path.dirname(os.path.abspath(__file__)))  #F:\eclipse\¡¤¡¤¡¤\¡¤¡¤¡¤\test_scrapy_spider
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))  #ÉèÖÃ¹¤³ÌµÄÄ¿Â¼
+# os.path.abspath(__file__)  #è·å–å½“å‰æ–‡ä»¶çš„è·¯å¾„
+# os.path.dirname(os.path.abspath(__file__))  #è·å–å½“å‰æ–‡ä»¶çš„æ–‡ä»¶å¤¹çš„è·¯å¾„
+print(os.path.abspath(__file__))  #F:\eclipse\Â·Â·Â·\Â·Â·Â·\test_scrapy_spider\main.py
+print(os.path.dirname(os.path.abspath(__file__)))  #F:\eclipse\Â·Â·Â·\Â·Â·Â·\test_scrapy_spider
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))  #è®¾ç½®å·¥ç¨‹çš„ç›®å½•
 
-# execute(['scrapy', 'crawl', 'jobbole_spider'])  #µ÷ÓÃexecuteº¯Êı£¬Ö´ĞĞscrapyÃüÁî
+# execute(['scrapy', 'crawl', 'jobbole_spider'])  #è°ƒç”¨executeå‡½æ•°ï¼Œæ‰§è¡Œscrapyå‘½ä»¤
 # execute(['scrapy', 'crawl', 'zhihu'])
 execute(["scrapy", "crawl", "lagou"])
 
@@ -372,7 +372,7 @@ execute(["scrapy", "crawl", "lagou"])
 # test_scrapy_spider\test_scrapy_spider\settings.py
 # -*- coding: utf-8 -*-
 
-import os  #ÓÃÓÚ»ñÈ¡µ±Ç°ÎÄ¼ş£¨setting.py£©µÄÂ·¾¶
+import os  #ç”¨äºè·å–å½“å‰æ–‡ä»¶ï¼ˆsetting.pyï¼‰çš„è·¯å¾„
 
 # Scrapy settings for test_scrapy_spider project
 #
@@ -439,31 +439,31 @@ ROBOTSTXT_OBEY = False
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    #'test_scrapy_spider.pipelines.JsonExporterPipeline': 2,  #Êı×ÖÔ½Ğ¡£¬Ô½ÏÈ´¦Àí
+    #'test_scrapy_spider.pipelines.JsonExporterPipeline': 2,  #æ•°å­—è¶Šå°ï¼Œè¶Šå…ˆå¤„ç†
     #'scrapy.pipelines.images.ImagesPipeline': 1
-    #'test_scrapy_spider.pipelines.ArticleImagePipeline': 1,  #µ÷ÓÃ¶¨ÖÆ»¯µÄpipeline£¨ArticleImagePipeline£©
+    #'test_scrapy_spider.pipelines.ArticleImagePipeline': 1,  #è°ƒç”¨å®šåˆ¶åŒ–çš„pipelineï¼ˆArticleImagePipelineï¼‰
     #'test_scrapy_spider.pipelines.MysqlPipeline': 1
     'test_scrapy_spider.pipelines.MysqlTwistedPipline': 1
 }
-IMAGES_URLS_FIELD = 'front_image_url'  #¸æËßimages itemsÖĞÄÄ¸öÊÇÍ¼Æ¬µÄurl  #imagesĞèÒª½ÓÊÜÒ»¸öÊı×é
-#os.path.dirname(__file__)  #»ñÈ¡µ±Ç°ÎÄ¼şµÄÄ¿Â¼Ãû³Æ£¨test_scrapy_spider£©  #__file__ÊÇµ±Ç°ÎÄ¼ş£¨setting.py£©µÄÃû³Æ
-project_dir =  os.path.abspath(os.path.dirname(__file__))  #»ñÈ¡µ±Ç°ÎÄ¼şµÄÄ¿Â¼µÄÂ·¾¶
-IMAGES_STORE = os.path.join(project_dir, 'images')  #Í¼Æ¬ÏÂÔØµÄ±£´æÂ·¾¶  ¿ÉÒÔÅäÖÃÎª¾ø¶ÔÂ·¾¶  Òª´æÔÚ¹¤³ÌÄ¿Â¼ÏÂ£¬¿ÉÒÔÊ¹ÓÃÏà¶ÔÂ·¾¶¡£ÔÚsettings.pyµÄÍ¬¼¶Ä¿Â¼ÏÂĞÂ½¨images
-                                                    #Í¼Æ¬´¢´æÔÚ project_dirÄ¿Â¼ÏÂµÄimagesÎÄ¼ş¼Ğ
-                                                    #ÒªÏÂÔØÍ¼Æ¬ĞèÒªPIL¿â
-                                                    #ÏÂcmdÏÂ°²×°PIL¿â
+IMAGES_URLS_FIELD = 'front_image_url'  #å‘Šè¯‰images itemsä¸­å“ªä¸ªæ˜¯å›¾ç‰‡çš„url  #imageséœ€è¦æ¥å—ä¸€ä¸ªæ•°ç»„
+#os.path.dirname(__file__)  #è·å–å½“å‰æ–‡ä»¶çš„ç›®å½•åç§°ï¼ˆtest_scrapy_spiderï¼‰  #__file__æ˜¯å½“å‰æ–‡ä»¶ï¼ˆsetting.pyï¼‰çš„åç§°
+project_dir =  os.path.abspath(os.path.dirname(__file__))  #è·å–å½“å‰æ–‡ä»¶çš„ç›®å½•çš„è·¯å¾„
+IMAGES_STORE = os.path.join(project_dir, 'images')  #å›¾ç‰‡ä¸‹è½½çš„ä¿å­˜è·¯å¾„  å¯ä»¥é…ç½®ä¸ºç»å¯¹è·¯å¾„  è¦å­˜åœ¨å·¥ç¨‹ç›®å½•ä¸‹ï¼Œå¯ä»¥ä½¿ç”¨ç›¸å¯¹è·¯å¾„ã€‚åœ¨settings.pyçš„åŒçº§ç›®å½•ä¸‹æ–°å»ºimages
+                                                    #å›¾ç‰‡å‚¨å­˜åœ¨ project_dirç›®å½•ä¸‹çš„imagesæ–‡ä»¶å¤¹
+                                                    #è¦ä¸‹è½½å›¾ç‰‡éœ€è¦PILåº“
+                                                    #ä¸‹cmdä¸‹å®‰è£…PILåº“
                                                     #pip install -i https://pypi.douban.com/simple pillow
-# IMAGES_MIN_HEIGHT = 100 #ÉèÖÃÏÂÔØÍ¼Æ¬µÄ×îĞ¡¸ß¶È  #¹ıÂËÍ¼Æ¬¿ÉÒÔÔÚsettng.pyÖĞÉèÖÃ
+# IMAGES_MIN_HEIGHT = 100 #è®¾ç½®ä¸‹è½½å›¾ç‰‡çš„æœ€å°é«˜åº¦  #è¿‡æ»¤å›¾ç‰‡å¯ä»¥åœ¨settng.pyä¸­è®¾ç½®
 # IMAGES_MIN_WIDTH = 100
-# '''Èç¹ûÒªÊµÏÖ×Ô¼ºµÄĞèÇó£¬Ò²¿ÉÒÔÖØÔØÏàÓ¦µÄº¯Êı´ïµ½ĞèÇó£¬ÔÚpipelinesÖĞ½¨Á¢Àà£¬¼Ì³ĞImagesPipeline¾Í¿ÉÒÔÁË'''
+# '''å¦‚æœè¦å®ç°è‡ªå·±çš„éœ€æ±‚ï¼Œä¹Ÿå¯ä»¥é‡è½½ç›¸åº”çš„å‡½æ•°è¾¾åˆ°éœ€æ±‚ï¼Œåœ¨pipelinesä¸­å»ºç«‹ç±»ï¼Œç»§æ‰¿ImagesPipelineå°±å¯ä»¥äº†'''
 
-# ÔÚF:\eclipse\¡¤¡¤¡¤\¡¤¡¤¡¤\test_scrapy_spider\test_scrapy_spider\settings.py ÏÂ£¬ÉèÖÃF:\eclipse\¡¤¡¤¡¤\¡¤¡¤¡¤\test_scrapy_spider\test_scrapy_spider Îª¸ùÄ¿Â¼
-# ÒòÎªËäÈ»ÔÚeclipseÀïÒÑ¾­½« F:\eclipse\¡¤¡¤¡¤\¡¤¡¤¡¤\test_scrapy_spider\test_scrapy_spider Ìí¼Óµ½pathÀïÁË£¬µ«ÔÚcmdÏÂ»¹Î´Ìí¼Ó
-import sys  #import os  ÔÚÉÏÃæĞ´¹ıÁË
-# sys.path.insert(0, "F:\eclipse\¡¤¡¤¡¤\¡¤¡¤¡¤\test_scrapy_spider\test_scrapy_spider")  #½«F:\eclipse\¡¤¡¤¡¤\¡¤¡¤¡¤\test_scrapy_spider\test_scrapy_spider Ìí¼Óµ½path
-BASE_DIR = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  #F:\eclipse\¡¤¡¤¡¤\¡¤¡¤¡¤\test_scrapy_spider  ¹¤³ÌÂ·¾¶
-sys.path.insert(0, os.path.join(BASE_DIR, 'test_scrapy_spider'))  #½«F:\eclipse\¡¤¡¤¡¤\¡¤¡¤¡¤\test_scrapy_spider\test_scrapy_spider Ìí¼Óµ½pathÀï
-             #·ÅÔÚµÚ0¸ö£¬»áÓÅÏÈÔÚF:\eclipse\¡¤¡¤¡¤\¡¤¡¤¡¤\test_scrapy_spider\test_scrapy_spiderÀïÕÒĞèÒªimportµÄmodule
+# åœ¨F:\eclipse\Â·Â·Â·\Â·Â·Â·\test_scrapy_spider\test_scrapy_spider\settings.py ä¸‹ï¼Œè®¾ç½®F:\eclipse\Â·Â·Â·\Â·Â·Â·\test_scrapy_spider\test_scrapy_spider ä¸ºæ ¹ç›®å½•
+# å› ä¸ºè™½ç„¶åœ¨eclipseé‡Œå·²ç»å°† F:\eclipse\Â·Â·Â·\Â·Â·Â·\test_scrapy_spider\test_scrapy_spider æ·»åŠ åˆ°pathé‡Œäº†ï¼Œä½†åœ¨cmdä¸‹è¿˜æœªæ·»åŠ 
+import sys  #import os  åœ¨ä¸Šé¢å†™è¿‡äº†
+# sys.path.insert(0, "F:\eclipse\Â·Â·Â·\Â·Â·Â·\test_scrapy_spider\test_scrapy_spider")  #å°†F:\eclipse\Â·Â·Â·\Â·Â·Â·\test_scrapy_spider\test_scrapy_spider æ·»åŠ åˆ°path
+BASE_DIR = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  #F:\eclipse\Â·Â·Â·\Â·Â·Â·\test_scrapy_spider  å·¥ç¨‹è·¯å¾„
+sys.path.insert(0, os.path.join(BASE_DIR, 'test_scrapy_spider'))  #å°†F:\eclipse\Â·Â·Â·\Â·Â·Â·\test_scrapy_spider\test_scrapy_spider æ·»åŠ åˆ°pathé‡Œ
+             #æ”¾åœ¨ç¬¬0ä¸ªï¼Œä¼šä¼˜å…ˆåœ¨F:\eclipse\Â·Â·Â·\Â·Â·Â·\test_scrapy_spider\test_scrapy_spideré‡Œæ‰¾éœ€è¦importçš„module
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/autothrottle.html
@@ -505,49 +505,49 @@ SQL_DATE_FORMAT = "%Y-%m-%d"
 # See: https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 
 from scrapy.pipelines.images import ImagesPipeline
-import codecs  #ÓÃcodecsÀ´Íê³ÉÎÄ¼şµÄ´ò¿ªºÍĞ´Èë
+import codecs  #ç”¨codecsæ¥å®Œæˆæ–‡ä»¶çš„æ‰“å¼€å’Œå†™å…¥
 import json
-from scrapy.exporters import JsonItemExporter  #½«jsonÎÄ¼şÊä³ö
+from scrapy.exporters import JsonItemExporter  #å°†jsonæ–‡ä»¶è¾“å‡º
 import MySQLdb
 import MySQLdb.cursors
-from twisted.enterprise import adbapi  #Ê¹MySQLdbµÄÒ»Ğ©²Ù×÷±ä³ÉÒì²½µÄ²Ù×÷
+from twisted.enterprise import adbapi  #ä½¿MySQLdbçš„ä¸€äº›æ“ä½œå˜æˆå¼‚æ­¥çš„æ“ä½œ
 
-class TestScrapySpiderPipeline(object):  #pipeline Ö÷ÒªÓÃÀ´×öÊı¾İ´æ´¢µÄ   #Õâ¸öpipelineµÄÊı×ÖÎª300£¬´ó£¬ºóÖ´ĞĞ
-    def process_item(self, item, spider):  #pipelines.py »á½ÓÊÜitem  #ÒªÈ¥settings.pyÖĞÈ¡Ïû×¢ÊÍ ITEM_PIPELINES
+class TestScrapySpiderPipeline(object):  #pipeline ä¸»è¦ç”¨æ¥åšæ•°æ®å­˜å‚¨çš„   #è¿™ä¸ªpipelineçš„æ•°å­—ä¸º300ï¼Œå¤§ï¼Œåæ‰§è¡Œ
+    def process_item(self, item, spider):  #pipelines.py ä¼šæ¥å—item  #è¦å»settings.pyä¸­å–æ¶ˆæ³¨é‡Š ITEM_PIPELINES
         return item
 
 
 
-class JsonWithEncodingPipeline(object):  #ÔÚsetting.pyÀïÅäÖÃÕâ¸öpipelineµÄÊı×ÖÎª2
-    #×Ô¶¨ÒåjsonÎÄ¼şµÄµ¼³ö
+class JsonWithEncodingPipeline(object):  #åœ¨setting.pyé‡Œé…ç½®è¿™ä¸ªpipelineçš„æ•°å­—ä¸º2
+    #è‡ªå®šä¹‰jsonæ–‡ä»¶çš„å¯¼å‡º
     def __init__(self):
         self.file = codecs.open('article.json', 'w', encoding='utf_8')
     
-    def process_item(self, item, spider):  #pipelines.py »á½ÓÊÜitem  ÔÚÕâÀï½«itemĞ´ÈëÎÄ¼ş
-        #µ÷ÓÃprocess_itemÊ±Òª¼ÇµÃreturn item£¬ ÒòÎªÏÂÒ»pipeline¿ÉÄÜ»¹ĞèÒª´¦Àíitem
-        lines = json.dump(dict(item), ensure_ascii=False) + '\n'  #ensure_ascii=False ²»ÉèÎªFalseµÄ»°Ğ´ÈëÖĞÎÄ»á³ö´í£¬»áÖ±½ÓĞ´ÈëUnicode
+    def process_item(self, item, spider):  #pipelines.py ä¼šæ¥å—item  åœ¨è¿™é‡Œå°†itemå†™å…¥æ–‡ä»¶
+        #è°ƒç”¨process_itemæ—¶è¦è®°å¾—return itemï¼Œ å› ä¸ºä¸‹ä¸€pipelineå¯èƒ½è¿˜éœ€è¦å¤„ç†item
+        lines = json.dump(dict(item), ensure_ascii=False) + '\n'  #ensure_ascii=False ä¸è®¾ä¸ºFalseçš„è¯å†™å…¥ä¸­æ–‡ä¼šå‡ºé”™ï¼Œä¼šç›´æ¥å†™å…¥Unicode
         self.file.write(lines)
         return item
     
-    def spider_closed(self, spider):  #µ±spider¹Ø±ÕÊ±»áµ÷ÓÃÕâ¸öº¯Êı
+    def spider_closed(self, spider):  #å½“spiderå…³é—­æ—¶ä¼šè°ƒç”¨è¿™ä¸ªå‡½æ•°
         self.file.close()
 
 
-class MysqlPipeline(object):  #Ğ´ºÃpipelineºó£¬Òª°ÑpipelineÅäÖÃµ½setting.pyÖĞ
-    #²ÉÓÃÍ¬²½µÄ»úÖÆĞ´Èëmysql  ²åÈëÊı¾İ¿âµÄËÙ¶È¿ÉÄÜ»áĞ¡ÓÚspiderµÄ½âÎöËÙ¶È -->¿¼ÂÇÓÃÒì²½
+class MysqlPipeline(object):  #å†™å¥½pipelineåï¼Œè¦æŠŠpipelineé…ç½®åˆ°setting.pyä¸­
+    #é‡‡ç”¨åŒæ­¥çš„æœºåˆ¶å†™å…¥mysql  æ’å…¥æ•°æ®åº“çš„é€Ÿåº¦å¯èƒ½ä¼šå°äºspiderçš„è§£æé€Ÿåº¦ -->è€ƒè™‘ç”¨å¼‚æ­¥
     def __init__(self):
-        self.conn = MySQLdb.connect('127.0.0.1', 'root', '123456', 'article_spider', charset='utf8', use_unicode=True)  #Á¬½ÓÊı¾İ¿â
-        #ÅäÖÃ¿ÉÒÔĞ´µ½setting.py ÖĞ
+        self.conn = MySQLdb.connect('127.0.0.1', 'root', '123456', 'article_spider', charset='utf8', use_unicode=True)  #è¿æ¥æ•°æ®åº“
+        #é…ç½®å¯ä»¥å†™åˆ°setting.py ä¸­
         # MYSQL_HOST = "127.0.0.1"
         # MYSQL_USER = "root"
         # MYSQL_PASSWORD = "123456"
         # MYSQL_DBNAME = "article_spider"
-        # MySQLdb.connectµÄ²ÎÊı
+        # MySQLdb.connectçš„å‚æ•°
         # MySQLdb.connect('host', 'user', 'password', 'dbname', charset='utf8', use_unicode=True)
         # conn = pymysql.Connect(host='127.0.0.1', user='root', passwd='123456', port=3306, db='pymysql_test01')
         self.cursor = self.conn.cursor()
         
-    def process_item(self, item, spider):  #ÖØÔØ process_item·½·¨
+    def process_item(self, item, spider):  #é‡è½½ process_itemæ–¹æ³•
         insert_sql = """
             insert into jobbole_article(title, create_date, url, url_object_id, fav_nums, front_image_url, front_image_path, praise_nums, comment_nums, tags, content)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
@@ -557,14 +557,14 @@ class MysqlPipeline(object):  #Ğ´ºÃpipelineºó£¬Òª°ÑpipelineÅäÖÃµ½setting.pyÖĞ
         
         
         
-class MysqlTwistedPipline(object):  #Ğ´ºÃpipelineºó£¬Òª°ÑpipelineÅäÖÃµ½setting.pyÖĞ
-    #'''Òì²½²åÈëmysql'''
+class MysqlTwistedPipline(object):  #å†™å¥½pipelineåï¼Œè¦æŠŠpipelineé…ç½®åˆ°setting.pyä¸­
+    #'''å¼‚æ­¥æ’å…¥mysql'''
     def __init__(self, dbpool):
         self.dbpool = dbpool
     
     @classmethod
-    def from_settings(cls, settings):  #Õâ¸ö·½·¨¿ÉÒÔ¶ÁÈ¡setting.pyÖĞµÄÖµ   # clsÖ¸µÄÊÇMysqlTwistedPipline Õâ¸öÀà
-        #'''´«ÈësettingsµÄ²ÎÊı'''
+    def from_settings(cls, settings):  #è¿™ä¸ªæ–¹æ³•å¯ä»¥è¯»å–setting.pyä¸­çš„å€¼   # clsæŒ‡çš„æ˜¯MysqlTwistedPipline è¿™ä¸ªç±»
+        #'''ä¼ å…¥settingsçš„å‚æ•°'''
         dbparms = dict(
             host = settings["MYSQL_HOST"],
             db = settings["MYSQL_DBNAME"],
@@ -574,63 +574,63 @@ class MysqlTwistedPipline(object):  #Ğ´ºÃpipelineºó£¬Òª°ÑpipelineÅäÖÃµ½setting.p
             cursorclass=MySQLdb.cursors.DictCursor,
             use_unicode=True,
         )
-        dbpool = adbapi.ConnectionPool("MySQLdb", **dbparms)  #´«Èë¿É±ä»¯µÄ²ÎÊıdbparms
-        #dbpool = adbapi.ConnectionPool("MySQLdb", host = settings["MYSQL_HOST"], db = settings["MYSQL_DBNAME"], ¡­¡­)
+        dbpool = adbapi.ConnectionPool("MySQLdb", **dbparms)  #ä¼ å…¥å¯å˜åŒ–çš„å‚æ•°dbparms
+        #dbpool = adbapi.ConnectionPool("MySQLdb", host = settings["MYSQL_HOST"], db = settings["MYSQL_DBNAME"], â€¦â€¦)
         
         return cls(dbpool)
 
     def process_item(self, item, spider):
-        #Ê¹ÓÃtwisted½«mysql²åÈë±ä³ÉÒì²½Ö´ĞĞ
-        query = self.dbpool.runInteraction(self.do_insert, item)  #do_insertÎªÒªÒì²½Ö´ĞĞµÄº¯Êı  #itemÎªÒª²åÈëµÄÊı¾İ
-        query.addErrback(self.handle_error, item, spider) #´¦ÀíÒì³£
+        #ä½¿ç”¨twistedå°†mysqlæ’å…¥å˜æˆå¼‚æ­¥æ‰§è¡Œ
+        query = self.dbpool.runInteraction(self.do_insert, item)  #do_insertä¸ºè¦å¼‚æ­¥æ‰§è¡Œçš„å‡½æ•°  #itemä¸ºè¦æ’å…¥çš„æ•°æ®
+        query.addErrback(self.handle_error, item, spider) #å¤„ç†å¼‚å¸¸
 
-    def handle_error(self, failure, item, spider):  #Òì²½´íÎó´¦Àíº¯Êı
-        # ´¦ÀíÒì²½²åÈëµÄÒì³£
+    def handle_error(self, failure, item, spider):  #å¼‚æ­¥é”™è¯¯å¤„ç†å‡½æ•°
+        # å¤„ç†å¼‚æ­¥æ’å…¥çš„å¼‚å¸¸
         print (failure)
 
 #     def do_insert(self, cursor, item):
-#         #Ö´ĞĞ¾ßÌåµÄ²åÈë
-#         #¸ù¾İ²»Í¬µÄitem ¹¹½¨²»Í¬µÄsqlÓï¾ä²¢²åÈëµ½mysqlÖĞ  #Ò²¿ÉÒÔÔÚitems.pyÀïµÄclass JobBoleArticleItem(scrapy.Item): ½øĞĞ´¦Àí
-#         if item.__class__.__name__ == "JobboleArticleItem":  #È¡µ±Ç°ÊµÀıµÄclassµÄname
+#         #æ‰§è¡Œå…·ä½“çš„æ’å…¥
+#         #æ ¹æ®ä¸åŒçš„item æ„å»ºä¸åŒçš„sqlè¯­å¥å¹¶æ’å…¥åˆ°mysqlä¸­  #ä¹Ÿå¯ä»¥åœ¨items.pyé‡Œçš„class JobBoleArticleItem(scrapy.Item): è¿›è¡Œå¤„ç†
+#         if item.__class__.__name__ == "JobboleArticleItem":  #å–å½“å‰å®ä¾‹çš„classçš„name
 #             insert_sql = """
 #                 insert into jobbole_article(title, create_date, url, url_object_id, fav_nums, front_image_url, front_image_path, praise_nums, comment_nums, tags, content)
 #                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
 #             """
 #             cursor.execute(insert_sql, (item["title"], item["create_date"], item["url"], item["url_object_id"], item["fav_nums"], item["front_image_url"], 'item["front_image_path"]', item["praise_nums"], item["comment_nums"], item["tags"], item["content"]))
 #             #TypeError: not all arguments converted during string formatting
-#             #Ç°ºó²ÎÊıµÄÊıÁ¿²»Ò»ÖÂ   Èç£º %sµÄ¸öÊıÓëºóÃæ´«ÈëµÄ²ÎÊıµÄ¸öÊı²»Ò»ÖÂ
-#             #self.conn.commit()  #»á×Ô¶¯commit
+#             #å‰åå‚æ•°çš„æ•°é‡ä¸ä¸€è‡´   å¦‚ï¼š %sçš„ä¸ªæ•°ä¸åé¢ä¼ å…¥çš„å‚æ•°çš„ä¸ªæ•°ä¸ä¸€è‡´
+#             #self.conn.commit()  #ä¼šè‡ªåŠ¨commit
 
     def do_insert(self, cursor, item):
-        #Ö´ĞĞ¾ßÌåµÄ²åÈë
-        #¸ù¾İ²»Í¬µÄitem ¹¹½¨²»Í¬µÄsqlÓï¾ä²¢²åÈëµ½mysqlÖĞ  #Ò²¿ÉÒÔÔÚitems.pyÀïµÄclass JobBoleArticleItem(scrapy.Item): ½øĞĞ´¦Àí
+        #æ‰§è¡Œå…·ä½“çš„æ’å…¥
+        #æ ¹æ®ä¸åŒçš„item æ„å»ºä¸åŒçš„sqlè¯­å¥å¹¶æ’å…¥åˆ°mysqlä¸­  #ä¹Ÿå¯ä»¥åœ¨items.pyé‡Œçš„class JobBoleArticleItem(scrapy.Item): è¿›è¡Œå¤„ç†
         insert_sql, params = item.get_insert_sql()
         cursor.execute(insert_sql, params)
 
 
-class JsonExporterPipeline(object):  #½«jsonÎÄ¼şÊä³ö    #ÔÚsetting.pyÀïÅäÖÃÕâ¸öpipelineµÄÊı×ÖÎª2£¬½øĞĞ²âÊÔ
-    #µ÷ÓÃscrapyÌá¹©µÄjson exportµ¼³öjsonÎÄ¼ş
+class JsonExporterPipeline(object):  #å°†jsonæ–‡ä»¶è¾“å‡º    #åœ¨setting.pyé‡Œé…ç½®è¿™ä¸ªpipelineçš„æ•°å­—ä¸º2ï¼Œè¿›è¡Œæµ‹è¯•
+    #è°ƒç”¨scrapyæä¾›çš„json exportå¯¼å‡ºjsonæ–‡ä»¶
     def __init__(self):
         self.file = open('articleexporter.json', 'wb')
-        self.exporter = JsonItemExporter(self.file, encoding='utf_8', ensure_ascii=False)  #ÓÃJsonItemExporter ×öÊµÀı»¯
+        self.exporter = JsonItemExporter(self.file, encoding='utf_8', ensure_ascii=False)  #ç”¨JsonItemExporter åšå®ä¾‹åŒ–
         self.exporter.start_exporting()
     
     def close_spider(self, spider):
         self.exporter.finish_exporting()
         self.file.close()
         
-    def process_item(self, item, spider):  #pipelines.py »á½ÓÊÜitem  ÔÚÕâÀï½«itemĞ´ÈëÎÄ¼ş
-        #µ÷ÓÃprocess_itemÊ±Òª¼ÇµÃreturn item£¬ ÒòÎªÏÂÒ»pipeline¿ÉÄÜ»¹ĞèÒª´¦Àíitem
+    def process_item(self, item, spider):  #pipelines.py ä¼šæ¥å—item  åœ¨è¿™é‡Œå°†itemå†™å…¥æ–‡ä»¶
+        #è°ƒç”¨process_itemæ—¶è¦è®°å¾—return itemï¼Œ å› ä¸ºä¸‹ä¸€pipelineå¯èƒ½è¿˜éœ€è¦å¤„ç†item
         self.exporter.export_item(item)
         return item
 
 
-class ArticleImagePipeline(ImagesPipeline):  #¶¨ÖÆ»¯pipeline  ArticleImagePipeline  #Õâ¸öpipelineµÄÊı×ÖÎª1£¬Ğ¡£¬ÏÈÖ´ĞĞ
-    def item_completed(self, results, item, info):  #ÖØÔØ item_completed
-        if 'front_image_path' in item:  #¿ÉÄÜÃ»ÓĞ·âÃæ   #itemÀàËÆÓÚÒ»¸ödict
+class ArticleImagePipeline(ImagesPipeline):  #å®šåˆ¶åŒ–pipeline  ArticleImagePipeline  #è¿™ä¸ªpipelineçš„æ•°å­—ä¸º1ï¼Œå°ï¼Œå…ˆæ‰§è¡Œ
+    def item_completed(self, results, item, info):  #é‡è½½ item_completed
+        if 'front_image_path' in item:  #å¯èƒ½æ²¡æœ‰å°é¢   #itemç±»ä¼¼äºä¸€ä¸ªdict
             for ok, value in results:
-                image_file_path = value['path']  #±£´æÍ¼Æ¬µÄ±¾µØÂ·¾¶
-            item['front_image_path'] = image_file_path  #±£´æÍ¼Æ¬µÄ±¾µØÂ·¾¶µ½items
+                image_file_path = value['path']  #ä¿å­˜å›¾ç‰‡çš„æœ¬åœ°è·¯å¾„
+            item['front_image_path'] = image_file_path  #ä¿å­˜å›¾ç‰‡çš„æœ¬åœ°è·¯å¾„åˆ°items
         return item
 
 
@@ -640,15 +640,15 @@ class ArticleImagePipeline(ImagesPipeline):  #¶¨ÖÆ»¯pipeline  ArticleImagePipeli
 import hashlib
 import re
 
-def get_md5(url):    # MD5ÕªÒªÉú³É
-    if isinstance(url, str):  #pythonÖĞstr == Unicode #ÅĞ¶ÏÊÇ²»ÊÇstr£¬ÆäÊµÊÇÅĞ¶ÏÊÇ²»ÊÇUnicode£¬python3ÖĞÄ¬ÈÏÊÇUnicode±àÂë
-        url = url.encode(encoding='utf_8')  #Èç¹ûÊÇUnicode£¬Ôò×ª»»³Éutf-8£¬¹şÏ£Ö»ÈÏutf-8
+def get_md5(url):    # MD5æ‘˜è¦ç”Ÿæˆ
+    if isinstance(url, str):  #pythonä¸­str == Unicode #åˆ¤æ–­æ˜¯ä¸æ˜¯strï¼Œå…¶å®æ˜¯åˆ¤æ–­æ˜¯ä¸æ˜¯Unicodeï¼Œpython3ä¸­é»˜è®¤æ˜¯Unicodeç¼–ç 
+        url = url.encode(encoding='utf_8')  #å¦‚æœæ˜¯Unicodeï¼Œåˆ™è½¬æ¢æˆutf-8ï¼Œå“ˆå¸Œåªè®¤utf-8
     m = hashlib.md5()
     m.update(url)
     return m.hexdigest()                      
 
 def extract_num(text):
-    #´Ó×Ö·û´®ÖĞÌáÈ¡³öÊı×Ö
+    #ä»å­—ç¬¦ä¸²ä¸­æå–å‡ºæ•°å­—
     match_re = re.match(".*?(\d+).*", text)
     if match_re:
         nums = int(match_re.group(1))
@@ -658,5 +658,5 @@ def extract_num(text):
     return nums
 
 if __name__ == "__main__":
-    print(get_md5("http://jobbole.com".encode(encoding='utf_8')))  #×¢Òâ£ºUnicode-objects must be encoded before hashing
+    print(get_md5("http://jobbole.com".encode(encoding='utf_8')))  #æ³¨æ„ï¼šUnicode-objects must be encoded before hashing
     # 0efdf49af511fd88681529ef8c2e5fbf
