@@ -1,4 +1,4 @@
-# ÔÚscrapy shell ÖĞµ÷ÊÔ
+# åœ¨scrapy shell ä¸­è°ƒè¯•
 
 
 
@@ -12,12 +12,12 @@ from scrapy.spiders import CrawlSpider, Rule
 from items import LagouJobItemLoader, LagouJobItem
 from utils.common import get_md5
 
-class LagouSpider(CrawlSpider):  #¼Ì³ĞCrawlSpider  #CrawlSpider²»ÄÜ¸²¸Çparseº¯Êı  # _parse_responseÊÇCrawlSpiderµÄºËĞÄº¯Êı
-    name = 'lagou'                                 #¿ÉÒÔÑ¡ÔñÖØÔØparse_start_url»òÕßprocess_results
+class LagouSpider(CrawlSpider):  #ç»§æ‰¿CrawlSpider  #CrawlSpiderä¸èƒ½è¦†ç›–parseå‡½æ•°  # _parse_responseæ˜¯CrawlSpiderçš„æ ¸å¿ƒå‡½æ•°
+    name = 'lagou'                                 #å¯ä»¥é€‰æ‹©é‡è½½parse_start_urlæˆ–è€…process_results
     allowed_domains = ['www.lagou.com']
     start_urls = ['https://www.lagou.com']
 
-#     rules = (  # rulesÀï·ÅRuleÊµÀı  #
+#     rules = (  # rulesé‡Œæ”¾Ruleå®ä¾‹  #
 #         Rule(LinkExtractor(allow=r'Items/'), callback='parse_item', follow=True),
 #     )
 # 
@@ -28,21 +28,21 @@ class LagouSpider(CrawlSpider):  #¼Ì³ĞCrawlSpider  #CrawlSpider²»ÄÜ¸²¸Çparseº¯Êı
 #         #i['description'] = response.xpath('//div[@id="description"]').extract()
 #         return i
 
-    rules = (  # rulesÀï·ÅRuleÊµÀı  #allowed_domains»áÏÈ¹ıÂËÒ»Ğ©url
+    rules = (  # rulesé‡Œæ”¾Ruleå®ä¾‹  #allowed_domainsä¼šå…ˆè¿‡æ»¤ä¸€äº›url
         Rule(LinkExtractor(allow=("zhaopin/.*",)), follow=True),  #https://www.lagou.com/zhaopin/Python/?labelWords=label
         Rule(LinkExtractor(allow=("gongsi/j\d+.html",)), follow=True),  #https://www.lagou.com/gongsi/j173918.html
         Rule(LinkExtractor(allow=r'jobs/\d+.html'), callback='parse_job', follow=True),  #https://www.lagou.com/jobs/4155435.html
-    )                           #Æ¥ÅäÕâ¸öreµÄurl£¬Ìøµ½parse_job
+    )                           #åŒ¹é…è¿™ä¸ªreçš„urlï¼Œè·³åˆ°parse_job
     #
-    # def parse_start_url(self, response):  #ÕâÀï²»ĞèÒªÖØÔØparse_start_url
+    # def parse_start_url(self, response):  #è¿™é‡Œä¸éœ€è¦é‡è½½parse_start_url
     #     return []
     #
-    # def process_results(self, response, results):  #ÕâÀï²»ĞèÒªÖØÔØprocess_results
+    # def process_results(self, response, results):  #è¿™é‡Œä¸éœ€è¦é‡è½½process_results
     #     return results
 
     def parse_job(self, response):
-        #½âÎöÀ­¹´ÍøµÄÖ°Î»
-        #pass  #debug¿´ruleÊÇ·ñÄÜ½øµ½parse_job
+        #è§£ææ‹‰å‹¾ç½‘çš„èŒä½
+        #pass  #debugçœ‹ruleæ˜¯å¦èƒ½è¿›åˆ°parse_job
         item_loader = LagouJobItemLoader(item=LagouJobItem(), response=response)
         item_loader.add_css("title", ".job-name::attr(title)")
         item_loader.add_value("url", response.url)
@@ -77,9 +77,9 @@ class LagouSpider(CrawlSpider):  #¼Ì³ĞCrawlSpider  #CrawlSpider²»ÄÜ¸²¸Çparseº¯Êı
 # https://doc.scrapy.org/en/latest/topics/items.html
 
 import scrapy
-from scrapy.loader.processors import MapCompose, TakeFirst, Join  #ÓÃÀ´¶Ô´«ÈëµÄÖµ½øĞĞ´¦Àí
+from scrapy.loader.processors import MapCompose, TakeFirst, Join  #ç”¨æ¥å¯¹ä¼ å…¥çš„å€¼è¿›è¡Œå¤„ç†
 import datetime
-from scrapy.loader import ItemLoader  #ÎªÁË²»Ã¿¸ö¶¼ÒªĞ´outputoutput_processor = TakeFirst() ÎÒÃÇ×Ô¶¨Ò»¸öitemloader  ÓëÊÇÒªÖØÔØÀàItemLoader
+from scrapy.loader import ItemLoader  #ä¸ºäº†ä¸æ¯ä¸ªéƒ½è¦å†™outputoutput_processor = TakeFirst() æˆ‘ä»¬è‡ªå®šä¸€ä¸ªitemloader  ä¸æ˜¯è¦é‡è½½ç±»ItemLoader
 import re
 from utils.common import extract_num
 from settings import SQL_DATETIME_FORMAT
@@ -92,15 +92,15 @@ class TestScrapySpiderItem(scrapy.Item):
     # name = scrapy.Field()
     pass
 
-def add_jobbole(value):  #´«¹ıÀ´µÄvalueÊÇÒ»¸östr
+def add_jobbole(value):  #ä¼ è¿‡æ¥çš„valueæ˜¯ä¸€ä¸ªstr
     return value+"-jobbole"
 
 
 def date_convert(value):
-    value = value.strip().replace('¡¤', '').strip()  #create_date = response.css('p.entry-meta-hide-on-mobile::text').extract()[0].strip().replace('¡¤', '').strip()
-                 #.strip()¿ÉÒÔÈ¥µôstrÍ·Î²µÄ¿Õ¸ñ  #.replace('¡¤', '')¿ÉÒÔÌæ»»strÖĞµÄ£¬Îª¿Õ
-    try:  #ÎªÁË½«ÎÄÕÂµÄ´´½¨Ê±¼äĞ´ÈëÊı¾İ¿â£¬Òª°ÑstrÀàĞÍµÄcreate_time×ª»»ÎªdateÀàĞÍ
-        create_date = datetime.datetime.strptime(value, '%Y/%m/%d').date()  #½«¸ñÊ½Îª%Y/%m/%d µÄstrÀàĞÍ×ª»»ÎªdateÀàĞÍ
+    value = value.strip().replace('Â·', '').strip()  #create_date = response.css('p.entry-meta-hide-on-mobile::text').extract()[0].strip().replace('Â·', '').strip()
+                 #.strip()å¯ä»¥å»æ‰strå¤´å°¾çš„ç©ºæ ¼  #.replace('Â·', '')å¯ä»¥æ›¿æ¢strä¸­çš„ï¼Œä¸ºç©º
+    try:  #ä¸ºäº†å°†æ–‡ç« çš„åˆ›å»ºæ—¶é—´å†™å…¥æ•°æ®åº“ï¼Œè¦æŠŠstrç±»å‹çš„create_timeè½¬æ¢ä¸ºdateç±»å‹
+        create_date = datetime.datetime.strptime(value, '%Y/%m/%d').date()  #å°†æ ¼å¼ä¸º%Y/%m/%d çš„strç±»å‹è½¬æ¢ä¸ºdateç±»å‹
     except Exception as e:
         create_date = datetime.datetime.now().date()
     return create_date
@@ -115,8 +115,8 @@ def get_nums(value):
     
     
 def remove_comment_tags(value):
-    #È¥µôtagÖĞÌáÈ¡µÄÆÀÂÛ
-    if "ÆÀÂÛ" in value:
+    #å»æ‰tagä¸­æå–çš„è¯„è®º
+    if "è¯„è®º" in value:
         return ""
     else:
         return value    
@@ -127,48 +127,48 @@ def return_value(value):
 
 
 
-class ArticleItemLoader(ItemLoader):  #×Ô¶¨Òåitemloader
-    default_output_processor = TakeFirst()  #ÕâÑù¾Í²»ÓÃÃ¿¸ö¶¼Ğ´outputoutput_processor = TakeFirst()
+class ArticleItemLoader(ItemLoader):  #è‡ªå®šä¹‰itemloader
+    default_output_processor = TakeFirst()  #è¿™æ ·å°±ä¸ç”¨æ¯ä¸ªéƒ½å†™outputoutput_processor = TakeFirst()
 
 
 
 class JobboleArticleItem(scrapy.Item):
 #     title = scrapy.Field(
-#         #input_processor = MapCompose(add_jobbole)  #title »á×÷Îªvalue ´«µİµ½add_jobbole·½·¨ÖĞ
+#         #input_processor = MapCompose(add_jobbole)  #title ä¼šä½œä¸ºvalue ä¼ é€’åˆ°add_jobboleæ–¹æ³•ä¸­
 #         #input_processor = MapCompose(lambda x:x+"--jobbole")
-#         input_processor = MapCompose(lambda x:x+"--jobbole", add_jobbole),  #titleÖĞµÄÃ¿¸öÖµÒÀ´Î´Ó×óµ½ÓÒµ÷ÓÃÁËÁ½¸öº¯Êı
+#         input_processor = MapCompose(lambda x:x+"--jobbole", add_jobbole),  #titleä¸­çš„æ¯ä¸ªå€¼ä¾æ¬¡ä»å·¦åˆ°å³è°ƒç”¨äº†ä¸¤ä¸ªå‡½æ•°
 #         #output_processor = TakeFirst()
 #         )
     title = scrapy.Field()
     create_date = scrapy.Field(
-        input_processor = MapCompose(date_convert),  #´¦ÀíÍêºóÊÇÒ»¸ölist£¬ listÀïÓĞdate
-        #output_processor = TakeFirst()  #È¡³ödate£¬ Ê¹listÀà±ä³ÉdateÀà
+        input_processor = MapCompose(date_convert),  #å¤„ç†å®Œåæ˜¯ä¸€ä¸ªlistï¼Œ listé‡Œæœ‰date
+        #output_processor = TakeFirst()  #å–å‡ºdateï¼Œ ä½¿listç±»å˜æˆdateç±»
         )
     url = scrapy.Field()
-    url_object_id = scrapy.Field()  #url ½øĞĞmd5´¦Àí£¬±ä³ÉÏàÍ¬³¤¶È
-    front_image_url = scrapy.Field(  #ÏÂÔØ·âÃæÍ¼Æ¬ÒªÔÚsettings.py ÖĞµÄ ITEM_PIPELINES ½øĞĞÅäÖÃ  #front_image_url ĞèÒª½ÓÊÕÒ»¸ölist  ÒòÎªimagesĞèÒª½ÓÊÜÒ»¸öÊı×é
-        output_processor = MapCompose(return_value)  #¸²¸Çµôdefault_output_processor = TakeFirst() Ê¹µÃ´«ÈëµÄÊÇÒ»¸ölist
+    url_object_id = scrapy.Field()  #url è¿›è¡Œmd5å¤„ç†ï¼Œå˜æˆç›¸åŒé•¿åº¦
+    front_image_url = scrapy.Field(  #ä¸‹è½½å°é¢å›¾ç‰‡è¦åœ¨settings.py ä¸­çš„ ITEM_PIPELINES è¿›è¡Œé…ç½®  #front_image_url éœ€è¦æ¥æ”¶ä¸€ä¸ªlist  å› ä¸ºimageséœ€è¦æ¥å—ä¸€ä¸ªæ•°ç»„
+        output_processor = MapCompose(return_value)  #è¦†ç›–æ‰default_output_processor = TakeFirst() ä½¿å¾—ä¼ å…¥çš„æ˜¯ä¸€ä¸ªlist
         )
-# """  settings.py ÏÂ
+# """  settings.py ä¸‹
 # ITEM_PIPELINES = {
-#     'test_scrapy_spider.pipelines.TestJobbolePipeline': 300,  #Êı×ÖÔ½Ğ¡£¬Ô½ÏÈ´¦Àí
+#     'test_scrapy_spider.pipelines.TestJobbolePipeline': 300,  #æ•°å­—è¶Šå°ï¼Œè¶Šå…ˆå¤„ç†
 #     #'scrapy.pipelines.images.ImagesPipeline': 1
-#     'test_scrapy_spider.pipelines.ArticleImagePipeline': 1  #µ÷ÓÃ¶¨ÖÆ»¯µÄpipeline£¨ArticleImagePipeline£©
+#     'test_scrapy_spider.pipelines.ArticleImagePipeline': 1  #è°ƒç”¨å®šåˆ¶åŒ–çš„pipelineï¼ˆArticleImagePipelineï¼‰
 # }
-# IMAGES_URLS_FIELD = 'front_image_url'  #¸æËßimages, itemsÖĞÄÄ¸öÊÇÍ¼Æ¬µÄurl  #imagesĞèÒª½ÓÊÜÒ»¸öÊı×é
-# import os  #ÓÃÓÚ»ñÈ¡µ±Ç°ÎÄ¼ş£¨setting.py£©µÄÂ·¾¶
-# #os.path.dirname(__file__)  #»ñÈ¡µ±Ç°ÎÄ¼şµÄÄ¿Â¼Ãû³Æ£¨test_scrapy_spider£©  #__file__ÊÇµ±Ç°ÎÄ¼ş£¨setting.py£©µÄÃû³Æ
-# project_dir =  os.path.abspath(os.path.dirname(__file__))  #»ñÈ¡µ±Ç°ÎÄ¼şµÄÄ¿Â¼µÄÂ·¾¶
-# IMAGES_STORE = os.path.join(project_dir, 'images')  #Í¼Æ¬ÏÂÔØµÄ±£´æÂ·¾¶  ¿ÉÒÔÅäÖÃÎª¾ø¶ÔÂ·¾¶  Òª´æÔÚ¹¤³ÌÄ¿Â¼ÏÂ£¬¿ÉÒÔÊ¹ÓÃÏà¶ÔÂ·¾¶¡£ÔÚsettings.pyµÄÍ¬¼¶Ä¿Â¼ÏÂĞÂ½¨images
-#                                                     #Í¼Æ¬´¢´æÔÚ project_dirÄ¿Â¼ÏÂµÄimagesÎÄ¼ş¼Ğ
-#                                                     #ÒªÏÂÔØÍ¼Æ¬ĞèÒªPIL¿â
-#                                                     #ÏÂcmdÏÂ°²×°PIL¿â
+# IMAGES_URLS_FIELD = 'front_image_url'  #å‘Šè¯‰images, itemsä¸­å“ªä¸ªæ˜¯å›¾ç‰‡çš„url  #imageséœ€è¦æ¥å—ä¸€ä¸ªæ•°ç»„
+# import os  #ç”¨äºè·å–å½“å‰æ–‡ä»¶ï¼ˆsetting.pyï¼‰çš„è·¯å¾„
+# #os.path.dirname(__file__)  #è·å–å½“å‰æ–‡ä»¶çš„ç›®å½•åç§°ï¼ˆtest_scrapy_spiderï¼‰  #__file__æ˜¯å½“å‰æ–‡ä»¶ï¼ˆsetting.pyï¼‰çš„åç§°
+# project_dir =  os.path.abspath(os.path.dirname(__file__))  #è·å–å½“å‰æ–‡ä»¶çš„ç›®å½•çš„è·¯å¾„
+# IMAGES_STORE = os.path.join(project_dir, 'images')  #å›¾ç‰‡ä¸‹è½½çš„ä¿å­˜è·¯å¾„  å¯ä»¥é…ç½®ä¸ºç»å¯¹è·¯å¾„  è¦å­˜åœ¨å·¥ç¨‹ç›®å½•ä¸‹ï¼Œå¯ä»¥ä½¿ç”¨ç›¸å¯¹è·¯å¾„ã€‚åœ¨settings.pyçš„åŒçº§ç›®å½•ä¸‹æ–°å»ºimages
+#                                                     #å›¾ç‰‡å‚¨å­˜åœ¨ project_dirç›®å½•ä¸‹çš„imagesæ–‡ä»¶å¤¹
+#                                                     #è¦ä¸‹è½½å›¾ç‰‡éœ€è¦PILåº“
+#                                                     #ä¸‹cmdä¸‹å®‰è£…PILåº“
 #                                                     #pip install -i https://pypi.douban.com/simple pillow
-# # IMAGES_MIN_HEIGHT = 100 #ÉèÖÃÏÂÔØÍ¼Æ¬µÄ×îĞ¡¸ß¶È  #¹ıÂËÍ¼Æ¬¿ÉÒÔÔÚsettng.pyÖĞÉèÖÃ
+# # IMAGES_MIN_HEIGHT = 100 #è®¾ç½®ä¸‹è½½å›¾ç‰‡çš„æœ€å°é«˜åº¦  #è¿‡æ»¤å›¾ç‰‡å¯ä»¥åœ¨settng.pyä¸­è®¾ç½®
 # # IMAGES_MIN_WIDTH = 100
-# # '''Èç¹ûÒªÊµÏÖ×Ô¼ºµÄĞèÇó£¬Ò²¿ÉÒÔÖØÔØÏàÓ¦µÄº¯Êı´ïµ½ĞèÇó£¬ÔÚpipelinesÖĞ½¨Á¢Àà£¬¼Ì³ĞImagesPipeline¾Í¿ÉÒÔÁË'''                              
+# # '''å¦‚æœè¦å®ç°è‡ªå·±çš„éœ€æ±‚ï¼Œä¹Ÿå¯ä»¥é‡è½½ç›¸åº”çš„å‡½æ•°è¾¾åˆ°éœ€æ±‚ï¼Œåœ¨pipelinesä¸­å»ºç«‹ç±»ï¼Œç»§æ‰¿ImagesPipelineå°±å¯ä»¥äº†'''                              
 # """
-    front_image_path = scrapy.Field()  #±¾µØÍ¼Æ¬Â·¾¶
+    front_image_path = scrapy.Field()  #æœ¬åœ°å›¾ç‰‡è·¯å¾„
     praise_nums = scrapy.Field(
         input_processor = MapCompose(get_nums)
         )
@@ -178,9 +178,9 @@ class JobboleArticleItem(scrapy.Item):
     comment_nums = scrapy.Field(
         input_processor = MapCompose(get_nums)
         )
-    tags = scrapy.Field(  #Õâ±ßµÄtagsÆäÊµÊÇtag_list£¬ÊÇÒ»¸ölist
-        input_processor = MapCompose(remove_comment_tags),  #È¥µôtagÖĞÌáÈ¡µÄÆÀÂÛ
-        output_processor = Join(',')  #²»ÄÜÓÃTakeFirst()£¬ÒªÓÃjoin£¬Join(',')ÖĞµÄ','ÊÇÔÚÖ¸¶¨Á¬½Ó·û
+    tags = scrapy.Field(  #è¿™è¾¹çš„tagså…¶å®æ˜¯tag_listï¼Œæ˜¯ä¸€ä¸ªlist
+        input_processor = MapCompose(remove_comment_tags),  #å»æ‰tagä¸­æå–çš„è¯„è®º
+        output_processor = Join(',')  #ä¸èƒ½ç”¨TakeFirst()ï¼Œè¦ç”¨joinï¼ŒJoin(',')ä¸­çš„','æ˜¯åœ¨æŒ‡å®šè¿æ¥ç¬¦
         )
     content = scrapy.Field()
 
@@ -196,7 +196,7 @@ class JobboleArticleItem(scrapy.Item):
 
 
 class ZhihuQuestionItem(scrapy.Item):
-    #ÖªºõµÄÎÊÌâ item
+    #çŸ¥ä¹çš„é—®é¢˜ item
     zhihu_id = scrapy.Field()
     topics = scrapy.Field()
     url = scrapy.Field()
@@ -209,38 +209,38 @@ class ZhihuQuestionItem(scrapy.Item):
     crawl_time = scrapy.Field()
 
     def get_insert_sql(self):
-        #²åÈëÖªºõquestion±íµÄsqlÓï¾ä
+        #æ’å…¥çŸ¥ä¹questionè¡¨çš„sqlè¯­å¥
         insert_sql = """
             insert into zhihu_question(zhihu_id, topics, url, title, content, create_time, update_time, answer_num, comments_num, watch_user_num, click_num, crawl_time, crawl_update_time)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             ON DUPLICATE KEY UPDATE content=VALUES(content), answer_num=VALUES(answer_num), comments_num=VALUES(comments_num),
               watch_user_num=VALUES(watch_user_num), click_num=VALUES(click_num)            
         """
-        #ÒÔÏÂ¶ÔÊı×é list [] ½øĞĞ´¦Àí
+        #ä»¥ä¸‹å¯¹æ•°ç»„ list [] è¿›è¡Œå¤„ç†
         #zhihu_id = int("".join(self["zhihu_id"]))
-        zhihu_id = self["zhihu_id"][0]  #zhihu_idÔÚzhihu.pyÖĞÒÑ¾­´¦Àí³ÉintÁË
+        zhihu_id = self["zhihu_id"][0]  #zhihu_idåœ¨zhihu.pyä¸­å·²ç»å¤„ç†æˆintäº†
         topics = ",".join(self["topics"])
         #url = "".join(self["url"])
         url = self["url"][0]
         title = "".join(self["title"])
         content = "".join(self["content"])
-        answer_num = extract_num("".join(self["answer_num"]))  #ÔÚutilsÀïµÄcommon.pyÀï¶¨Òå·½·¨extract_num  #ÓÃÀ´ÌáÈ¡Êı×Ö
+        answer_num = extract_num("".join(self["answer_num"]))  #åœ¨utilsé‡Œçš„common.pyé‡Œå®šä¹‰æ–¹æ³•extract_num  #ç”¨æ¥æå–æ•°å­—
         comments_num = extract_num("".join(self["comments_num"]))
 
         if len(self["watch_user_num"]) == 2:
-            self["watch_user_num"] = [x.replace(',', '') for x in self["watch_user_num"]]  #È¥µô['3,110', '824,551']ÖĞµÄ,
+            self["watch_user_num"] = [x.replace(',', '') for x in self["watch_user_num"]]  #å»æ‰['3,110', '824,551']ä¸­çš„,
             watch_user_num = int(self["watch_user_num"][0])
             click_num = int(self["watch_user_num"][1])
         else:
             watch_user_num = int(self["watch_user_num"][0])
             click_num = 0
 
-        crawl_time = datetime.datetime.now().strftime(SQL_DATETIME_FORMAT)  #strftime(SQL_DATETIME_FORMAT)¿ÉÒÔ°ÑtimeÀàĞÍ×ª»¯³ÉstrÀàĞÍ  # (SQL_DATETIME_FORMAT)¿ÉÒÔÔÚsettings.pyÖĞÖ¸¶¨Òª×ªÎªÄÄÖÖ¸ñÊ½
+        crawl_time = datetime.datetime.now().strftime(SQL_DATETIME_FORMAT)  #strftime(SQL_DATETIME_FORMAT)å¯ä»¥æŠŠtimeç±»å‹è½¬åŒ–æˆstrç±»å‹  # (SQL_DATETIME_FORMAT)å¯ä»¥åœ¨settings.pyä¸­æŒ‡å®šè¦è½¬ä¸ºå“ªç§æ ¼å¼
 
-#         create_time = datetime.datetime.now().date()  #Ìî³ädate£¬Ê¹µÃÊı¾İ¿â¿ÉÒÔ²åÈë
+#         create_time = datetime.datetime.now().date()  #å¡«å……dateï¼Œä½¿å¾—æ•°æ®åº“å¯ä»¥æ’å…¥
 #         update_time = datetime.datetime.now().date()
 #         crawl_update_time = datetime.datetime.now().date()
-        create_time = None  #Ìî³ädate£¬Ê¹µÃÊı¾İ¿â¿ÉÒÔ²åÈë
+        create_time = None  #å¡«å……dateï¼Œä½¿å¾—æ•°æ®åº“å¯ä»¥æ’å…¥
         update_time = None
         crawl_update_time = None
         
@@ -251,7 +251,7 @@ class ZhihuQuestionItem(scrapy.Item):
 
 
 class ZhihuAnswerItem(scrapy.Item):
-    #ÖªºõµÄÎÊÌâ»Ø´ğitem
+    #çŸ¥ä¹çš„é—®é¢˜å›ç­”item
     zhihu_id = scrapy.Field()
     url = scrapy.Field()
     question_id = scrapy.Field()
@@ -264,7 +264,7 @@ class ZhihuAnswerItem(scrapy.Item):
     crawl_time = scrapy.Field()
 
     def get_insert_sql(self):
-        #²åÈëÖªºõquestion±íµÄsqlÓï¾ä
+        #æ’å…¥çŸ¥ä¹questionè¡¨çš„sqlè¯­å¥
         insert_sql = """
             insert into zhihu_answer(zhihu_id, url, question_id, author_id, content, parise_num, comments_num,
               create_time, update_time, crawl_time
@@ -272,11 +272,11 @@ class ZhihuAnswerItem(scrapy.Item):
               ON DUPLICATE KEY UPDATE content=VALUES(content), comments_num=VALUES(comments_num), parise_num=VALUES(parise_num),
               update_time=VALUES(update_time)
         """
-        # ON DUPLICATE KEY UPDATEµ±Ö÷¼ü³åÍ»Ê±£¬¸üĞÂ¡­¡­
+        # ON DUPLICATE KEY UPDATEå½“ä¸»é”®å†²çªæ—¶ï¼Œæ›´æ–°â€¦â€¦
 
-        create_time = datetime.datetime.fromtimestamp(self["create_time"]).strftime(SQL_DATETIME_FORMAT)  #´Ójson´«¹ıÀ´Ê±£¬create_timeÊÇintÀàĞÍµÄ
-        update_time = datetime.datetime.fromtimestamp(self["update_time"]).strftime(SQL_DATETIME_FORMAT)  #´Ójson´«¹ıÀ´Ê±£¬update_timeÊÇintÀàĞÍµÄ
-        #.fromtimestamp¿ÉÒÔ°Ñint×ª»¯³Édatetime  #.strftime°Ñdatetime×ª»¯³É×Ô¶¨ÒåÄ£Ê½£¨SQL_DATETIME_FORMAT£©µÄ×Ö·û´®
+        create_time = datetime.datetime.fromtimestamp(self["create_time"]).strftime(SQL_DATETIME_FORMAT)  #ä»jsonä¼ è¿‡æ¥æ—¶ï¼Œcreate_timeæ˜¯intç±»å‹çš„
+        update_time = datetime.datetime.fromtimestamp(self["update_time"]).strftime(SQL_DATETIME_FORMAT)  #ä»jsonä¼ è¿‡æ¥æ—¶ï¼Œupdate_timeæ˜¯intç±»å‹çš„
+        #.fromtimestampå¯ä»¥æŠŠintè½¬åŒ–æˆdatetime  #.strftimeæŠŠdatetimeè½¬åŒ–æˆè‡ªå®šä¹‰æ¨¡å¼ï¼ˆSQL_DATETIME_FORMATï¼‰çš„å­—ç¬¦ä¸²
         
         params = (
             self["zhihu_id"], self["url"], self["question_id"],
@@ -290,21 +290,21 @@ class ZhihuAnswerItem(scrapy.Item):
 
 
 def remove_splash(value):
-    #È¥µô¹¤×÷³ÇÊĞµÄĞ±Ïß
+    #å»æ‰å·¥ä½œåŸå¸‚çš„æ–œçº¿
     return value.replace("/","")
 
-def handle_jobaddr(value):  #value='\n                                                ±±¾© -\n             º£µíÇø\n                - ±±¾©ÊĞº£µíÇø¿ÆÑ§ÔºÄÏÂ·2ºÅÈÚ¿Æ×ÊÑ¶ÖĞĞÄA×ù316\n                              ²é¿´µØÍ¼\n        '
-    addr_list = value.split("\n")  #ÒÔ\nÎª½ç£¬½«str»®·Ö³Élist
-    addr_list = [item.strip() for item in addr_list if item.strip()!="²é¿´µØÍ¼"]  #´¦Àílist£¬È¥µô¿Õ¸ñºÍ²é¿´µØÍ¼
-    return "".join(addr_list)  #ÓÃ¿Õ½«´¦Àí¹ıµÄlistÁ¬³Éstr
+def handle_jobaddr(value):  #value='\n                                                åŒ—äº¬ -\n             æµ·æ·€åŒº\n                - åŒ—äº¬å¸‚æµ·æ·€åŒºç§‘å­¦é™¢å—è·¯2å·èç§‘èµ„è®¯ä¸­å¿ƒAåº§316\n                              æŸ¥çœ‹åœ°å›¾\n        '
+    addr_list = value.split("\n")  #ä»¥\nä¸ºç•Œï¼Œå°†stråˆ’åˆ†æˆlist
+    addr_list = [item.strip() for item in addr_list if item.strip()!="æŸ¥çœ‹åœ°å›¾"]  #å¤„ç†listï¼Œå»æ‰ç©ºæ ¼å’ŒæŸ¥çœ‹åœ°å›¾
+    return "".join(addr_list)  #ç”¨ç©ºå°†å¤„ç†è¿‡çš„listè¿æˆstr
 
 class LagouJobItemLoader(ItemLoader):
-    #×Ô¶¨Òåitemloader
+    #è‡ªå®šä¹‰itemloader
     default_output_processor = TakeFirst()
 
 
 class LagouJobItem(scrapy.Item):
-    #À­¹´ÍøÖ°Î»ĞÅÏ¢
+    #æ‹‰å‹¾ç½‘èŒä½ä¿¡æ¯
     title = scrapy.Field()
     url = scrapy.Field()
     url_object_id = scrapy.Field()
@@ -344,7 +344,7 @@ class LagouJobItem(scrapy.Item):
             self["work_years"], self["degree_need"], self["job_type"],
             self["publish_time"], self["job_advantage"], self["job_desc"],
             self["job_addr"], self["company_name"], self["company_url"],
-            self["job_addr"], self["crawl_time"].strftime(SQL_DATETIME_FORMAT),
+            self["tags"], self["crawl_time"].strftime(SQL_DATETIME_FORMAT),
         )
 
         return insert_sql, params
