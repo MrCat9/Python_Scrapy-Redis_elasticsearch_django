@@ -266,3 +266,14 @@ OK
 1) "scrapy-redis"
 127.0.0.1:6379> zcount zcourses_set 6 10
 (integer) 1
+
+
+
+127.0.0.1:6379> keys *  #查看redis中的所有变量
+1) "name"
+2) "mykey"
+3) "course_set2"
+4) "zcourses_set"
+5) "myhash"
+6) "courses"
+7) "course_set"
