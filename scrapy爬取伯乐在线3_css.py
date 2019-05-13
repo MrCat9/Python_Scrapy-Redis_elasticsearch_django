@@ -6,7 +6,7 @@ CSS选择器
 li a                          选取所有li 下的所有a节点
 ul + p                        选择ul后面的第一个p元素（ul与p元素属于兄弟节点）
 div#container > ul            选取id 为container的div的第一个ul 子元素
-ul ~ p                        选取与u|相邻的所有p元素
+ul ~ p                        选取与ul相邻的所有p元素
 a[title]                      选取所有有title属性的a元素
 a[href="http://jobbole.com"]  选取所有href属性为jobbole.com 值的a 元素
 a[href*="jobole"]             选取所有href属性包含jobbole的a 元素
