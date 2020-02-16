@@ -23,7 +23,7 @@ https://pypi.douban.com/simple/
 
 使用方法：
 cmd下:
-pip install -i https://pypi.douban.com/simple/ django
+pip install -i https://pypi.doubanio.com/simple/ django
 
 卸载
 cmd下：
@@ -67,7 +67,7 @@ virtualenvwrapper
 安装：
 cmd下，在虚拟环境的目录下
 cd C:\Users\admin\scrapy_test\Scripts
-pip install -i https://pypi.douban.com/simple/ virtualenvwrapper-win
+pip install -i https://pypi.doubanio.com/simple/ virtualenvwrapper-win
 
 
 
@@ -90,9 +90,9 @@ workon test_vir
 
 
 在虚拟环境下可以安装（如：requests）
-pip install -i https://pypi.douban.com/simple requests
+pip install -i https://pypi.doubanio.com/simple/ requests
 （如：scrapy）
-pip install -i https://pypi.douban.com/simple scrapy
+pip install -i https://pypi.doubanio.com/simple/ scrapy
 
 
 
